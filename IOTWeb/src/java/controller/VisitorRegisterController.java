@@ -37,20 +37,20 @@ public class VisitorRegisterController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            BufferedReader reader = request.getReader();
-            JsonObject json = new JsonParser().parse(reader).getAsJsonObject();
-            JsonObject responseObj = new JsonObject();
-            String email     = request.getParameter("email");
-            String name      = "name1";
-            String password  = request.getParameter("password");
-            int age          = 1;
-            String gender    = "M";
-            ArrayList<String> preferences = new ArrayList<>();
-            preferences.add("test1");
-            
-            UserDAO.registerVisitor(email, name, age, gender, password, preferences);
+        BufferedReader reader = request.getReader();
+        JsonObject json  = new JsonParser().parse(reader).getAsJsonObject();
+        String email     = json.get("email").getAsString();
+        String name      = json.get("name").getAsString();
+        String password  = json.get("password").getAsString();
+        int age          = json.get("age").getAsInt();
+        String gender    = json.get("gender").getAsString();
+
+        ArrayList<String> preferences = new ArrayList<>();
+        for (Object preference : json.getAsJsonArray("preferences")) {
+            preferences.add((String) preference);
         }
+
+        UserDAO.registerVisitor(email, name, age, gender, password, preferences);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

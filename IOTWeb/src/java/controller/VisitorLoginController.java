@@ -5,7 +5,11 @@
  */
 package controller;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import dao.UserDAO;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -35,13 +39,13 @@ public class VisitorLoginController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String email     = request.getParameter("email");
-            String password  = request.getParameter("password");
-            boolean success  = UserDAO.authenticateVisitor(email, password);
-            if (success) {
+            BufferedReader reader = request.getReader();
+            JsonObject json  = new JsonParser().parse(reader).getAsJsonObject();
+            String email     = json.get("email").getAsString();
+            String password  = json.get("password").getAsString();
+            
+            if (UserDAO.authenticateVisitor(email, password)) {
                 response.sendRedirect("main.jsp");
-            } else {
-                response.sendRedirect("index.html");
             }
         }
     }
