@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Dion
  */
-@WebServlet(name = "LoginController", urlPatterns = {"/LoginController"})
+@WebServlet(name = "VisitorLoginController", urlPatterns = {"/VisitorLoginController"})
 public class VisitorLoginController extends HttpServlet {
 
     /**
@@ -41,8 +41,8 @@ public class VisitorLoginController extends HttpServlet {
             String password = request.getParameter("password");
 //            int age = 1;
 //            String gender = "M";
-            ArrayList<String> preferences = new ArrayList<>();
-            preferences.add("test1");
+//            ArrayList<String> preferences = new ArrayList<>();
+//            preferences.add("test1");
             
 //            UserDAO.register(email, name, age, gender, password, preferences);
             boolean success = UserDAO.authenticateVisitor(email, password);
