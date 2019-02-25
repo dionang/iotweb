@@ -12,6 +12,10 @@
         <title>Main page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h1>Welcome to the main page</h1>
+        <form action="LogoutController" method="get">
+            <input type="submit" value="logout" 
+                 name="Submit" id="logout" />
+        </form>
     </body>
 </html>
