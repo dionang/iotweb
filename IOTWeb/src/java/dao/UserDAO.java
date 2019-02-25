@@ -24,7 +24,7 @@ public class UserDAO {
         
         try {
             conn = ConnectionManager.getConnection();
-            stmt = conn.prepareStatement("select * from user where email = ?");
+            stmt = conn.prepareStatement("select * from visitor where email = ?");
             stmt.setString(1, email);
             rs = stmt.executeQuery();
             
@@ -67,29 +67,20 @@ public class UserDAO {
         }
     }
     
-    public static boolean register(String email, String name, int age, String gender, String password, ArrayList<String> preferences) {
+    public static boolean registerVisitor(String email, String name, int age, String gender, String password, ArrayList<String> preferences) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
+            String hash = BCrypt.hashpw(password, BCrypt.gensalt());
             conn = ConnectionManager.getConnection();
-            stmt = conn.prepareStatement("insert into user values (?, ?, ?, ?, ?)");
+            stmt = conn.prepareStatement("insert into visitor values (?, ?, ?, ?, ?)");
             stmt.setString(1, email);
             stmt.setString(2, name);
             stmt.setInt(3, age);
             stmt.setString(4, gender);
-            stmt.setString(5, BCrypt.hashpw(password, BCrypt.gensalt()));
+            stmt.setString(5, hash);
             stmt.executeUpdate();
-            System.out.println(BCrypt.hashpw(password, BCrypt.gensalt()));
-            
-            // proceed to add interest
-//            if(rs.next()){
-//                String passwordHash = rs.getString("password");
-//                return BCrypt.checkpw(enteredPassword, passwordHash);
-//            } else {
-//                return false;
-//            }
-//    
             return true;
         } catch (SQLException e) {
             return false;

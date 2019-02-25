@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Dion
  */
 @WebServlet(name = "LoginController", urlPatterns = {"/LoginController"})
-public class LoginController extends HttpServlet {
+public class VisitorLoginController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,15 +37,20 @@ public class LoginController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             String email    = request.getParameter("email");
-            String name = "name1";
+//            String name = "name1";
             String password = request.getParameter("password");
-            int age = 1;
-            String gender = "M";
+//            int age = 1;
+//            String gender = "M";
             ArrayList<String> preferences = new ArrayList<>();
             preferences.add("test1");
             
-            UserDAO.register(email, name, age, gender, password, preferences);
-            response.sendRedirect("main.jsp");
+//            UserDAO.register(email, name, age, gender, password, preferences);
+            boolean success = UserDAO.authenticateVisitor(email, password);
+            if (success) {
+                response.sendRedirect("main.jsp");
+            } else {
+                response.sendRedirect("index.html");
+            }
         }
     }
 
