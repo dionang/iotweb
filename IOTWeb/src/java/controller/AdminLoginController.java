@@ -5,13 +5,9 @@
  */
 package controller;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import dao.UserDAO;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,8 +18,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Dion
  */
-@WebServlet(name = "VisitorRegisterController", urlPatterns = {"/VisitorRegisterController"})
-public class VisitorRegisterController extends HttpServlet {
+@WebServlet(name = "AdminLoginController", urlPatterns = {"/AdminLoginController"})
+public class AdminLoginController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,18 +34,14 @@ public class VisitorRegisterController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            BufferedReader reader = request.getReader();
-            JsonObject json = new JsonParser().parse(reader).getAsJsonObject();
-            JsonObject responseObj = new JsonObject();
             String email     = request.getParameter("email");
-            String name      = "name1";
             String password  = request.getParameter("password");
-            int age          = 1;
-            String gender    = "M";
-            ArrayList<String> preferences = new ArrayList<>();
-            preferences.add("test1");
-            
-            UserDAO.registerVisitor(email, name, age, gender, password, preferences);
+            boolean success  = UserDAO.authenticateVisitor(email, password);
+            if (success) {
+                response.sendRedirect("main.jsp");
+            } else {
+                response.sendRedirect("index.html");
+            }
         }
     }
 
