@@ -37,7 +37,7 @@ public class AdminLoginController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             String email     = request.getParameter("email");
             String password  = request.getParameter("password");
-            boolean success  = UserDAO.authenticateVisitor(email, password);
+            boolean success  = UserDAO.authenticateAdmin(email, password);
             if (success) {
                 HttpSession session = request.getSession();
                 session.setAttribute("email", email);

@@ -47,10 +47,14 @@ public class VisitorRegisterController extends HttpServlet {
 
         ArrayList<String> preferences = new ArrayList<>();
         for (Object preference : json.getAsJsonArray("preferences")) {
-            preferences.add((String) preference);
+            preferences.add(preference.toString());
         }
-
-        UserDAO.registerVisitor(email, name, age, gender, password, preferences);
+        boolean result = UserDAO.registerVisitor(email, name, age, gender, password, preferences);
+        if(result){
+            response.setStatus(HttpServletResponse.SC_ACCEPTED);
+        }else{
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

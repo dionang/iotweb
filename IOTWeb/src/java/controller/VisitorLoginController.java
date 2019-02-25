@@ -45,7 +45,9 @@ public class VisitorLoginController extends HttpServlet {
             String password  = json.get("password").getAsString();
             
             if (UserDAO.authenticateVisitor(email, password)) {
-                response.sendRedirect("main.jsp");
+                response.setStatus(HttpServletResponse.SC_ACCEPTED);
+            }else{
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
         }
     }
