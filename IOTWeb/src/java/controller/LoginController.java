@@ -5,8 +5,10 @@
  */
 package controller;
 
+import dao.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,8 +36,16 @@ public class LoginController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            String user = request.getParameter("user");
-            String pw   = request.getParameter("pw");
+            String email    = request.getParameter("email");
+            String name = "name1";
+            String password = request.getParameter("password");
+            int age = 1;
+            String gender = "M";
+            ArrayList<String> preferences = new ArrayList<>();
+            preferences.add("test1");
+            
+            UserDAO.register(email, name, age, gender, password, preferences);
+            response.sendRedirect("main.jsp");
         }
     }
 

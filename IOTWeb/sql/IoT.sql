@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Feb 25, 2019 at 08:36 AM
+-- Generation Time: Feb 25, 2019 at 09:28 AM
 -- Server version: 5.6.38
 -- PHP Version: 7.2.1
 
@@ -19,6 +19,53 @@ SET time_zone = "+00:00";
 --
 -- Database: `IoT`
 --
+CREATE DATABASE IF NOT EXISTS `IoT` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `IoT`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin`
+--
+
+CREATE TABLE `admin` (
+  `email` varchar(50) NOT NULL,
+  `name` varchar(20) NOT NULL,
+  `password` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `beacon`
+--
+
+CREATE TABLE `beacon` (
+  `bid` varchar(20) NOT NULL,
+  `location` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `event`
+--
+
+CREATE TABLE `event` (
+  `eid` int(20) NOT NULL,
+  `eventName` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `eventCategory`
+--
+
+CREATE TABLE `eventCategory` (
+  `eid` int(20) NOT NULL,
+  `category` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -28,7 +75,32 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `preferences` (
   `email` varchar(30) NOT NULL,
-  `preference` varchar(20) NOT NULL
+  `category` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reading`
+--
+
+CREATE TABLE `reading` (
+  `location` varchar(30) NOT NULL,
+  `datatime` datetime NOT NULL,
+  `email` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `schedule`
+--
+
+CREATE TABLE `schedule` (
+  `location` varchar(20) NOT NULL,
+  `startDateTime` datetime NOT NULL,
+  `endDateTime` datetime NOT NULL,
+  `eid` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -38,10 +110,10 @@ CREATE TABLE `preferences` (
 --
 
 CREATE TABLE `user` (
-  `username` varchar(20) NOT NULL,
-  `password` varchar(20) NOT NULL,
-  `email` varchar(30) NOT NULL,
-  `gender` varchar(1) NOT NULL
+  `email` varchar(50) NOT NULL,
+  `name` varchar(20) NOT NULL,
+  `age` int(20) NOT NULL,
+  `password` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -49,16 +121,62 @@ CREATE TABLE `user` (
 --
 
 --
+-- Indexes for table `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`email`,`name`,`password`);
+
+--
+-- Indexes for table `beacon`
+--
+ALTER TABLE `beacon`
+  ADD PRIMARY KEY (`bid`);
+
+--
+-- Indexes for table `event`
+--
+ALTER TABLE `event`
+  ADD PRIMARY KEY (`eid`);
+
+--
+-- Indexes for table `eventCategory`
+--
+ALTER TABLE `eventCategory`
+  ADD PRIMARY KEY (`eid`,`category`);
+
+--
 -- Indexes for table `preferences`
 --
 ALTER TABLE `preferences`
-  ADD PRIMARY KEY (`email`,`preference`);
+  ADD PRIMARY KEY (`email`,`category`);
+
+--
+-- Indexes for table `reading`
+--
+ALTER TABLE `reading`
+  ADD PRIMARY KEY (`location`,`datatime`,`email`);
+
+--
+-- Indexes for table `schedule`
+--
+ALTER TABLE `schedule`
+  ADD PRIMARY KEY (`location`,`startDateTime`,`endDateTime`,`eid`);
 
 --
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`email`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `event`
+--
+ALTER TABLE `event`
+  MODIFY `eid` int(20) NOT NULL AUTO_INCREMENT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
