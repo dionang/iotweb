@@ -35,17 +35,9 @@ public class VisitorLoginController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String email    = request.getParameter("email");
-//            String name = "name1";
-            String password = request.getParameter("password");
-//            int age = 1;
-//            String gender = "M";
-//            ArrayList<String> preferences = new ArrayList<>();
-//            preferences.add("test1");
-            
-//            UserDAO.register(email, name, age, gender, password, preferences);
-            boolean success = UserDAO.authenticateVisitor(email, password);
+            String email     = request.getParameter("email");
+            String password  = request.getParameter("password");
+            boolean success  = UserDAO.authenticateVisitor(email, password);
             if (success) {
                 response.sendRedirect("main.jsp");
             } else {

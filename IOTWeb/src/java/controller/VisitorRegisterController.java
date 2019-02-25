@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Dion
  */
-@WebServlet(name = "LoginController", urlPatterns = {"/LoginController"})
+@WebServlet(name = "VisitorRegisterController", urlPatterns = {"/VisitorRegisterController"})
 public class VisitorRegisterController extends HttpServlet {
 
     /**
@@ -35,12 +35,11 @@ public class VisitorRegisterController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String email    = request.getParameter("email");
-            String name = "name1";
-            String password = request.getParameter("password");
-            int age = 1;
-            String gender = "M";
+            String email     = request.getParameter("email");
+            String name      = "name1";
+            String password  = request.getParameter("password");
+            int age          = 1;
+            String gender    = "M";
             ArrayList<String> preferences = new ArrayList<>();
             preferences.add("test1");
             
