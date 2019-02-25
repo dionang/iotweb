@@ -5,11 +5,9 @@
  */
 package controller;
 
-import dao.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,10 +15,9 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Dion
+ * @author moses
  */
-@WebServlet(name = "AdminLoginController", urlPatterns = {"/AdminLoginController"})
-public class AdminLoginController extends HttpServlet {
+public class LogoutController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,19 +30,9 @@ public class AdminLoginController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            String email     = request.getParameter("email");
-            String password  = request.getParameter("password");
-            boolean success  = UserDAO.authenticateVisitor(email, password);
-            if (success) {
-                HttpSession session = request.getSession();
-                session.setAttribute("email", email);
-                response.sendRedirect("main.jsp");
-            } else {
-                response.sendRedirect("login.jsp");
-            }
-        }
+        HttpSession session = request.getSession();
+        session.invalidate();
+        response.sendRedirect("login.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
