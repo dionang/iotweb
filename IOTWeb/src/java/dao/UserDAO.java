@@ -101,7 +101,12 @@ public class UserDAO {
             
             stmt.setString(1, beaconId);
             java.util.Date date = new java.util.Date();
-            System.out.println(new java.sql.Timestamp(date.getTime()));
+            String osName = System.getProperty("os.name");
+            if (osName.equals("Linux")) {
+                Calendar c = Calendar.getInstance(); 
+                c.add(Calendar.HOUR, 6);
+                date = c.getTime();
+            }
             stmt.setTimestamp(2, new java.sql.Timestamp(date.getTime()));
 
             stmt.setString(3, email);
