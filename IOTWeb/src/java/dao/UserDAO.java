@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.sql.Date;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
@@ -80,6 +82,29 @@ public class UserDAO {
             stmt.setInt(3, age);
             stmt.setString(4, gender);
             stmt.setString(5, hash);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+    }
+    
+    public static boolean registerVisitorLocation(String email, String beaconId) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("insert into reading values (?, ?, ?)");
+            
+            stmt.setString(1, beaconId);
+            java.util.Date date = new java.util.Date();
+            System.out.println(new java.sql.Timestamp(date.getTime()));
+            stmt.setTimestamp(2, new java.sql.Timestamp(date.getTime()));
+
+            stmt.setString(3, email);
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
