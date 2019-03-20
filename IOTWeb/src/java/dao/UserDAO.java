@@ -104,7 +104,7 @@ public class UserDAO {
             String osName = System.getProperty("os.name");
             if (osName.equals("Linux")) {
                 Calendar c = Calendar.getInstance(); 
-                c.add(Calendar.HOUR, 6);
+                c.add(Calendar.HOUR, 8);
                 date = c.getTime();
             }
             stmt.setTimestamp(2, new java.sql.Timestamp(date.getTime()));
