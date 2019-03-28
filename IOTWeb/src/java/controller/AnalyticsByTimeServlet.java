@@ -5,11 +5,15 @@
  */
 package controller;
 
+import com.google.gson.JsonObject;
+import dao.AnalyticsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.TreeMap;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -46,6 +50,20 @@ public class AnalyticsByTimeServlet extends HttpServlet {
             try {
                 startDateTime = sdf.parse(startDateTimeStr);
                 endDateTime = sdf.parse(endDateTimeStr);
+                TreeMap<Date, HashMap<String, Integer>> resultMap = AnalyticsDAO.analyticsByTime(startDateTime, endDateTime);
+                JsonObject result = new JsonObject();
+                for (Date date : resultMap.keySet()) {
+                    JsonObject locationCountObj = new JsonObject();
+                    HashMap<String, Integer> locationCount = resultMap.get(date);
+                    
+                    for (String location : locationCount.keySet()) {
+                        locationCountObj.addProperty(location, locationCount.get(location));
+                    }
+                    
+                    result.add(date.toString(), locationCountObj);
+                }
+                
+                out.println(result.toString());
             } catch (ParseException ex) {
                 
             }
