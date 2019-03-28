@@ -5,19 +5,11 @@
  */
 package controller;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import dao.UserDAO;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author moses
  */
-public class VisitorInputController extends HttpServlet {
+public class AnalyticsByTimeServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,29 +34,23 @@ public class VisitorInputController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            BufferedReader reader = request.getReader();
-            JsonObject json  = new JsonParser().parse(reader).getAsJsonObject();
-            String email     = json.get("email").getAsString();
-            String beaconId  = json.get("beaconId").getAsString();
+            String startDateTimeStr = request.getParameter("startDateTime");
+            String endDateTimeStr = request.getParameter("endDateTime");
             
-            boolean result = UserDAO.registerVisitorLocation(email, beaconId);
+            Date startDateTime = null;
+            Date endDateTime = null;
             
-            if(result){
-                response.setStatus(HttpServletResponse.SC_ACCEPTED);
-            }else{
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            String pattern = "yyyy-MM-dd'T'HH:mm";
+            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+            
+            try {
+                startDateTime = sdf.parse(startDateTimeStr);
+                endDateTime = sdf.parse(endDateTimeStr);
+            } catch (ParseException ex) {
+                
             }
-
-
-//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//            Date startDate = sdf.parse(json.get("sDate").getAsString());
-//            Date endDate = sdf.parse(json.get("eDate").getAsString());
-//            
-//            UserDAO.registerVisitorLocation2(email, beaconId, startDate, endDate);
-//            
-//        } catch (ParseException ex) {
-//            Logger.getLogger(VisitorInputController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+            
+            
         }
     }
 
