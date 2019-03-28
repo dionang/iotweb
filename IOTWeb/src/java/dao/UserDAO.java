@@ -91,15 +91,39 @@ public class UserDAO {
         }
     }
     
-    public static boolean registerVisitorLocation(String email, String beaconId) {
+    public static String getLocationFromBeacon(String beaconId){
+        String location = null;
+        
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("Select location from beacon where bid = '" + beaconId + "';");
+            rs = stmt.executeQuery();
+            while(rs.next()){
+                location = rs.getString("location");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return location;
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+        return location;
+    }
+    
+    public static boolean registerVisitorLocation(String email, String beaconId) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            String location = getLocationFromBeacon(beaconId);
+            System.out.println("L: " + location);
+            conn = ConnectionManager.getConnection();
             stmt = conn.prepareStatement("insert into reading values (?, ?, ?)");
             
-            stmt.setString(1, beaconId);
+            stmt.setString(1, location);
             java.util.Date date = new java.util.Date();
             String osName = System.getProperty("os.name");
             if (osName.equals("Linux")) {
@@ -118,4 +142,33 @@ public class UserDAO {
             ConnectionManager.close(conn, stmt, rs);
         }
     }
+    
+//    public static boolean registerVisitorLocation2(String email, String beaconId, java.util.Date startDate, java.util.Date endDate) {
+//        Connection conn = null;
+//        PreparedStatement stmt = null;
+//        ResultSet rs = null;
+//        try {
+//            String location = getLocationFromBeacon(beaconId);
+//            conn = ConnectionManager.getConnection();
+//            String statement = ("insert into reading values");
+//            statement += "('" + location + "', '" + new java.sql.Timestamp(startDate.getTime()) + "', '" + email + "'),";
+//            while(startDate.before(endDate)){
+//                Calendar c = Calendar.getInstance();
+//                c.setTime(startDate);
+//                c.add(Calendar.MINUTE, 5);
+//                startDate = c.getTime();
+//                statement += "('" + location + "', '" + new java.sql.Timestamp(startDate.getTime()) + "', '" + email + "'),";
+//            }
+//            statement = statement.substring(0, statement.length()-1);
+//            System.out.println(statement);
+//            stmt = conn.prepareStatement(statement);
+//            stmt.executeUpdate();
+//            return true;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return false;
+//        } finally {
+//            ConnectionManager.close(conn, stmt, rs);
+//        }
+//    }
 }
