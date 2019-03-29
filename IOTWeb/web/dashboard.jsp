@@ -187,19 +187,18 @@
         </div>-->
 
         <div class='row'>
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <div class="form-group">
                     <label>Start Date Time:</label>
-                    <input type="datetime-local" class="form-control" placeholder="Start Date Time" id="startDateTime" value='2019-03-22T11:00:00' required>
+                    <input type="datetime-local" class="form-control" placeholder="Start Date Time" id="startDateTime" required>
                 </div> 
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <div class="form-group">
                     <label>End Date Time:</label>
-                    <input type="datetime-local" class="form-control" placeholder="End Date Time"   id="endDateTime"  value='2019-03-22T19:00:00' required>
+                    <input type="datetime-local" class="form-control" placeholder="End Date Time"   id="endDateTime"   required>
                 </div> 
             </div>
-            <div class='col-md-2'></div>
             <div class="col-md-2">
                 <br/>
                 <input type="submit" name="analyticsByTime" onclick="getData()" class="btn" style="border: solid #9F9F9F 1px;" value="Submit">
@@ -292,6 +291,12 @@
   
   <script>
     window.onload = function() {
+        var date   = new Date();
+        date       = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+        
+        // auto-populate start and end dates
+        document.getElementById('startDateTime').value = date.toISOString().substring(0, 11) + "00:00:00";
+        document.getElementById('endDateTime').value   = date.toISOString().substring(0, 19);
         getData();
     }
     
