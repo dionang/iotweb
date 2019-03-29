@@ -5,12 +5,14 @@
  */
 package controller;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import dao.AnalyticsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TreeMap;
@@ -36,7 +38,7 @@ public class AnalyticsByTimeServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("text/json;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             String startDateTimeStr = request.getParameter("startDateTime");
             String endDateTimeStr = request.getParameter("endDateTime");
@@ -50,25 +52,36 @@ public class AnalyticsByTimeServlet extends HttpServlet {
             try {
                 startDateTime = sdf.parse(startDateTimeStr);
                 endDateTime = sdf.parse(endDateTimeStr);
-                TreeMap<Date, HashMap<String, Integer>> resultMap = AnalyticsDAO.analyticsByTime(startDateTime, endDateTime);
+                ArrayList<ArrayList<String>> resultList = AnalyticsDAO.analyticsByTime(startDateTime, endDateTime);
+                
                 JsonObject result = new JsonObject();
-                for (Date date : resultMap.keySet()) {
-                    JsonObject locationCountObj = new JsonObject();
-                    HashMap<String, Integer> locationCount = resultMap.get(date);
-                    
-                    for (String location : locationCount.keySet()) {
-                        locationCountObj.addProperty(location, locationCount.get(location));
+                ArrayList<String> timeLabels = resultList.get(0);
+                ArrayList<String> locationLabels = resultList.get(1);
+                
+                JsonArray data = new JsonArray();
+                for (int i = 0; i < resultList.size(); i++) {
+                    JsonArray dataArr = new JsonArray();
+                    for (String s : resultList.get(i)) {
+                        dataArr.add(s);
                     }
                     
-                    result.add(date.toString(), locationCountObj);
+                    if (i == 0) {
+                        result.add("timeLabels", dataArr);
+                    } else if (i == 1) {
+                        result.add("locationLabels", dataArr);
+                    // from 2 onwards is the actual data
+                    } else {
+                        data.add(dataArr);
+                    }
                 }
+                
+                // add elements to json object
+                result.add("data", data);
                 
                 out.println(result.toString());
             } catch (ParseException ex) {
                 
             }
-            
-//            AnalyticsDAO.analyticsByTime(, sdf.parse("2019-03-22 19:00:00"));
         }
     }
 
