@@ -74,7 +74,7 @@ public class AnalyticsDAO {
         
         Date actualStartDate = startDate;
         
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd - h a"); //2019-03-18 12:00:16
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH"); //2019-03-18 12:00:16
         Calendar c = Calendar.getInstance();
         c.setTime(startDate);
         ArrayList<String> dateList = new ArrayList<>();
@@ -145,7 +145,17 @@ public class AnalyticsDAO {
         result.addAll(dataList);
         
         
-        return result;
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd MMM - ha");
+        ArrayList<String> formattedDateList = new ArrayList<>();
+        for(String date : result.get(0)){
+            date = sdf1.format(sdf.parse(date));
+            formattedDateList.add(date);
+        }
+        ArrayList<ArrayList<String>> formattedResult = new ArrayList<>();
+        formattedResult.add(formattedDateList);
+        result.remove(0);
+        formattedResult.addAll(result);
+        return formattedResult;
         
     }
 }
