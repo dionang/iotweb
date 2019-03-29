@@ -74,7 +74,7 @@ public class AnalyticsDAO {
         
         Date actualStartDate = startDate;
         
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH"); //2019-03-18 12:00:16
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd - h a"); //2019-03-18 12:00:16
         Calendar c = Calendar.getInstance();
         c.setTime(startDate);
         ArrayList<String> dateList = new ArrayList<>();
