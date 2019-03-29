@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.AnalyticsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -50,7 +51,7 @@ public class AnalyticsByTimeServlet extends HttpServlet {
                 
             }
             
-            
+//            AnalyticsDAO.analyticsByTime(, sdf.parse("2019-03-22 19:00:00"));
         }
     }
 

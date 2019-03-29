@@ -217,6 +217,63 @@
             </div>               
         </form>
 
+<div class="content">
+<!--                                                                    <div id="chartPreferences" class="ct-chart" style="height:100%">
+                                                                        <canvas id="transactionsOverview"></canvas>
+                                                                    </div>
+                                                                    <script>
+                                                                        var chartName = new String("transactionsOverview");
+                                                                        var pieChart = document.getElementById(chartName).getContext("2d");
+                                                                        var barChart = new Chart(pieChart, {
+                                                                            type: 'bar',
+                                                                            data: {
+                                                                              labels: ['a','b'],
+                                                                              datasets: [{
+                                                                                label: 'Cash ($)',
+                                                                                data: [1,2],
+                                                                                backgroundColor:'rgba(255, 99, 132, 0.6)'
+                                                                              },
+                                                                                  {
+                                                                                label: 'Card ($)',
+                                                                                data: [5,3],
+                                                                                backgroundColor:'rgba(54, 162, 235, 0.6)' 
+                                                                              }
+                                                                            },
+                                                                            options: {
+                                                                                legend: {
+                                                                                    display: true,
+                                                                                    position: 'top'
+
+                                                                                },
+                                                                                scales: {
+                                                                                    xAxes:[{
+                                                                                        stacked: true,
+                                                                                        scaleLabel: {
+                                                                                            display: true,
+                                                                                            fontSize: 14,
+                                                                                            labelString: "Time Period"
+                                                                                        }
+                                                                                    }],
+                                                                                    yAxes:[{
+                                                                                        stacked: true,
+                                                                                        scaleLabel: {
+                                                                                            display: true,
+                                                                                            fontSize: 14,
+                                                                                            labelString: "Cash Value ($)"
+                                                                                        }
+                                                                                        
+                                                                                    }]
+                                                                                },
+                                                                                tooltips: {
+                                                                                    enabled: true
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                         );
+                                                            </script>
+                                                        </div>
+                                                    </div>
+                                                </div>-->
         <!-- Area Chart Example-->
         <div class="card mb-3">
           <div class="card-header">

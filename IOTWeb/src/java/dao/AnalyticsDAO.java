@@ -56,7 +56,7 @@ public class AnalyticsDAO {
         ResultSet rs = null;
         try {
             conn = ConnectionManager.getConnection();
-            stmt = conn.prepareStatement("Select distinct location from beacon;");
+            stmt = conn.prepareStatement("Select distinct location from beacon order by location;");
             rs = stmt.executeQuery();
             while(rs.next()){
                 String location = rs.getString("location");
@@ -72,30 +72,52 @@ public class AnalyticsDAO {
         return result;
     }
     
-    public static TreeMap<Date, HashMap<String, Integer>> analyticsByTime(Date startDate, Date endDate){
-        TreeMap<Date, HashMap<String, Integer>> result = new TreeMap<>();
+    public static ArrayList<ArrayList<String>> analyticsByTime(Date startDate, Date endDate){ // [[labels (time)], [label (location list)], [count in location 1 by time], [count in location 2 by time] ... ]
+        ArrayList<ArrayList<String>> result = new ArrayList<>();
+        
+        Date actualStartDate = startDate;
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH"); //2019-03-18 12:00:16
+        Calendar c = Calendar.getInstance();
+        c.setTime(startDate);
+        ArrayList<String> dateList = new ArrayList<>();
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        startDate = c.getTime();
+        while(startDate.before(endDate)){
+            dateList.add(sdf.format(startDate));
+            c.add(Calendar.HOUR, 1);
+            startDate = c.getTime();
+            System.out.println(startDate);
+        }
+        result.add(dateList);
+        
+        ArrayList<String> locationList = getAllLocations();
+        result.add(locationList);
+        
+        
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH"); //2019-03-18 12:00:16
+        HashMap<Date,HashMap<String,Integer>> tempResult = new HashMap<>();
         try {
             conn = ConnectionManager.getConnection();
-            stmt = conn.prepareStatement("Select location, datetime, concat(year(datetime),'-',month(datetime),'-',day(datetime),' ',HOUR(datetime)) as date, count(distinct email) as num from reading where datetime >= '" + new java.sql.Timestamp(startDate.getTime()) + "' and datetime <= '" + new java.sql.Timestamp(endDate.getTime()) + "' group by location, date");
-            System.out.println(stmt);
+            stmt = conn.prepareStatement("Select location, datetime, concat(year(datetime),'-',month(datetime),'-',day(datetime),' ',HOUR(datetime)) as date, count(distinct email) as num from reading where datetime >= '" + new java.sql.Timestamp(actualStartDate.getTime()) + "' and datetime <= '" + new java.sql.Timestamp(endDate.getTime()) + "' group by location, date");
             rs = stmt.executeQuery();
             while(rs.next()){
                 String location = rs.getString("location");
                 Date date = sdf.parse(rs.getString("date"));
                 int num = rs.getInt("num");
                 
-                if(result.containsKey(date)){
-                    HashMap<String, Integer> locationCount = result.get(date);
+                if(tempResult.containsKey(date)){
+                    HashMap<String, Integer> locationCount = tempResult.get(date);
                     locationCount.put(location, num);
+                    tempResult.put(date, locationCount);
                 }else{
                     HashMap<String, Integer> tempMap = new HashMap<>();
                     tempMap.put(location, num);
-                    result.put(date, tempMap);
+                    tempResult.put(date, tempMap);
                 }
             }
         } catch (SQLException e) {
@@ -106,6 +128,32 @@ public class AnalyticsDAO {
         } finally {
             ConnectionManager.close(conn, stmt, rs);
         }
+        
+        ArrayList<ArrayList<String>> dataList = new ArrayList<>();
+        for(int i = 0; i < locationList.size(); i++){
+            dataList.add(new ArrayList<>());
+        }
+        for(String dateString : result.get(0)){
+            for (String locationName : result.get(1)){
+                for(Date date : tempResult.keySet()){
+                    try {
+                        if(date.equals(sdf.parse(dateString))){
+                            if(tempResult.get(date).containsKey(locationName)){
+                                if(("" + tempResult.get(date).get(locationName)).length() != 0){
+                                    dataList.get(locationList.indexOf(locationName)).add(("" + tempResult.get(date).get(locationName)));
+                                }
+                            }else{
+                                dataList.get(locationList.indexOf(locationName)).add(("0"));
+                            }
+                        }
+                    } catch (ParseException ex) {
+                        Logger.getLogger(AnalyticsDAO.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        
+        result.addAll(dataList);
         
         return result;
         
