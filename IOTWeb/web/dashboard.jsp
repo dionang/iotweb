@@ -190,13 +190,13 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label>Start Date Time:</label>
-                    <input type="datetime-local" class="form-control" placeholder="Start Date Time" id="startDateTime" value='2019-03-19T12:00:00' required>
+                    <input type="datetime-local" class="form-control" placeholder="Start Date Time" id="startDateTime" value='2019-03-22T11:00:00' required>
                 </div> 
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label>End Date Time:</label>
-                    <input type="datetime-local" class="form-control" placeholder="End Date Time"   id="endDateTime" value='2019-03-19T18:00:00' required>
+                    <input type="datetime-local" class="form-control" placeholder="End Date Time"   id="endDateTime"  value='2019-03-22T19:00:00' required>
                 </div> 
             </div>
             <div class='col-md-2'>
@@ -217,63 +217,6 @@
             </div>               
         </div>
 
-<div class="content">
-<!--                                                                    <div id="chartPreferences" class="ct-chart" style="height:100%">
-                                                                        <canvas id="transactionsOverview"></canvas>
-                                                                    </div>
-                                                                    <script>
-                                                                        var chartName = new String("transactionsOverview");
-                                                                        var pieChart = document.getElementById(chartName).getContext("2d");
-                                                                        var barChart = new Chart(pieChart, {
-                                                                            type: 'bar',
-                                                                            data: {
-                                                                              labels: ['a','b'],
-                                                                              datasets: [{
-                                                                                label: 'Cash ($)',
-                                                                                data: [1,2],
-                                                                                backgroundColor:'rgba(255, 99, 132, 0.6)'
-                                                                              },
-                                                                                  {
-                                                                                label: 'Card ($)',
-                                                                                data: [5,3],
-                                                                                backgroundColor:'rgba(54, 162, 235, 0.6)' 
-                                                                              }
-                                                                            },
-                                                                            options: {
-                                                                                legend: {
-                                                                                    display: true,
-                                                                                    position: 'top'
-
-                                                                                },
-                                                                                scales: {
-                                                                                    xAxes:[{
-                                                                                        stacked: true,
-                                                                                        scaleLabel: {
-                                                                                            display: true,
-                                                                                            fontSize: 14,
-                                                                                            labelString: "Time Period"
-                                                                                        }
-                                                                                    }],
-                                                                                    yAxes:[{
-                                                                                        stacked: true,
-                                                                                        scaleLabel: {
-                                                                                            display: true,
-                                                                                            fontSize: 14,
-                                                                                            labelString: "Cash Value ($)"
-                                                                                        }
-                                                                                        
-                                                                                    }]
-                                                                                },
-                                                                                tooltips: {
-                                                                                    enabled: true
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                         );
-                                                            </script>
-                                                        </div>
-                                                    </div>
-                                                </div>-->
         <!-- Area Chart Example-->
         <div class="card mb-3">
           <div class="card-header">
@@ -365,11 +308,56 @@
       $.post('AnalyticsByTimeServlet', {
         startDateTime : startDateTime,
         endDateTime   : endDateTime
-      }, function(data) {
-        alert(data);
+      }, function(response) {
+        var colors = ['#D6E9C6', '#FAEBCC', '#EBCCD1'];
+        var ctx = document.getElementById("myAreaChart");
+        var datasets = [];
+        alert(response);
+        for (var i = 0; i < response.data.length; i++) {
+            var location = response.locationLabels[i];
+            var data = response.data[i];
+            var dataObj = {
+                'label': location,
+                'data' : data,
+                'backgroundColor' : colors[i]
+            };
+            
+            datasets.push(dataObj);
+        }
+        
+        
+        var myLineChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: response.timeLabels,
+                datasets: datasets
+            },
+            options: {
+                scales: {
+                    xAxes: [
+                        { 
+                            stacked: true 
+                        }
+                    ],
+                    yAxes: [
+                        { 
+                            stacked: true,
+                            ticks: {
+                                callback: function(value) {
+                                    if (value % 1 === 0) {
+                                        return value;
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        });
       });
     }
   </script>
 </body>
 
 </html>
+    
