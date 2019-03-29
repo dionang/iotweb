@@ -12,9 +12,9 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -69,7 +69,7 @@ public class AnalyticsDAO {
         return result;
     }
     
-    public static ArrayList<ArrayList<String>> analyticsByTime(Date startDate, Date endDate){ // [[labels (time)], [label (location list)], [count in location 1 by time], [count in location 2 by time] ... ]
+    public static ArrayList<ArrayList<String>> analyticsByTime(Date startDate, Date endDate) throws ParseException{ // [[labels (time)], [label (location list)], [count in location 1 by time], [count in location 2 by time] ... ]
         ArrayList<ArrayList<String>> result = new ArrayList<>();
         
         Date actualStartDate = startDate;
@@ -85,7 +85,6 @@ public class AnalyticsDAO {
             dateList.add(sdf.format(startDate));
             c.add(Calendar.HOUR, 1);
             startDate = c.getTime();
-            System.out.println(startDate);
         }
         result.add(dateList);
         
@@ -101,6 +100,7 @@ public class AnalyticsDAO {
         try {
             conn = ConnectionManager.getConnection();
             stmt = conn.prepareStatement("Select location, datetime, concat(year(datetime),'-',month(datetime),'-',day(datetime),' ',HOUR(datetime)) as date, count(distinct email) as num from reading where datetime >= '" + new java.sql.Timestamp(actualStartDate.getTime()) + "' and datetime <= '" + new java.sql.Timestamp(endDate.getTime()) + "' group by location, date");
+            System.out.println(stmt);
             rs = stmt.executeQuery();
             while(rs.next()){
                 String location = rs.getString("location");
@@ -132,25 +132,18 @@ public class AnalyticsDAO {
         }
         for(String dateString : result.get(0)){
             for (String locationName : result.get(1)){
-                for(Date date : tempResult.keySet()){
-                    try {
-                        if(date.equals(sdf.parse(dateString))){
-                            if(tempResult.get(date).containsKey(locationName)){
-                                if(("" + tempResult.get(date).get(locationName)).length() != 0){
-                                    dataList.get(locationList.indexOf(locationName)).add(("" + tempResult.get(date).get(locationName)));
-                                }
-                            }else{
-                                dataList.get(locationList.indexOf(locationName)).add(("0"));
-                            }
-                        }
-                    } catch (ParseException ex) {
-                        Logger.getLogger(AnalyticsDAO.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                if(tempResult.containsKey(sdf.parse(dateString)) && tempResult.get(sdf.parse(dateString)).get(locationName) != null){
+                    dataList.get(locationList.indexOf(locationName)).add(("" + tempResult.get(sdf.parse(dateString)).get(locationName)));
+                    System.out.println("added " + tempResult.get(sdf.parse(dateString)).get(locationName));
+                }else{
+                    dataList.get(locationList.indexOf(locationName)).add(("0"));
+                    System.out.println("added 0");
                 }
             }
         }
         
         result.addAll(dataList);
+        
         
         return result;
         
