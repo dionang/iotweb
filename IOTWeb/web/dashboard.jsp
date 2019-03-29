@@ -199,18 +199,7 @@
                     <input type="datetime-local" class="form-control" placeholder="End Date Time"   id="endDateTime"  value='2019-03-22T19:00:00' required>
                 </div> 
             </div>
-            <div class='col-md-2'>
-                <div class='form-group'>
-                    <label>Time-step</label>
-                    <select name="timestep" class="form-control" placeholder="Select Time-step">
-                        <option selected="true" disabled="disabled" value="auto">Auto</option>
-                        <option value='hour'>Hour</option>
-                        <option value='day'>Day</option>
-                        <option value='week'>Week</option>
-                        <option value='month'>Month</option>
-                    </select>
-                </div>
-            </div>
+            <div class='col-md-2'></div>
             <div class="col-md-2">
                 <br/>
                 <input type="submit" name="analyticsByTime" onclick="getData()" class="btn" style="border: solid #9F9F9F 1px;" value="Submit">
@@ -223,7 +212,7 @@
             <i class="fas fa-chart-area"></i>
             Area Chart Example</div>
           <div class="card-body">
-            <canvas id="myAreaChart" width="100%" height="30"></canvas>
+            <canvas id="myBarChart" width="100%" height="30"></canvas>
           </div>
           <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
         </div>
@@ -302,6 +291,11 @@
   <script src="js/demo/chart-area-demo.js"></script>
   
   <script>
+    window.onload = function() {
+        getData();
+    }
+    
+    var myBarChart = null;
     function getData() {
       var startDateTime = document.getElementById('startDateTime').value;
       var endDateTime   = document.getElementById('endDateTime').value;
@@ -309,10 +303,9 @@
         startDateTime : startDateTime,
         endDateTime   : endDateTime
       }, function(response) {
-        var colors = ['#D6E9C6', '#FAEBCC', '#EBCCD1'];
-        var ctx = document.getElementById("myAreaChart");
+        var colors = ['#008080', '#007FFF', '#FFBF00', '#8A2BE2', '#964B00', '#50C878', '#B57EDC', '#003153 ', '#C71585', '#C0C0C0']
+        var ctx = document.getElementById("myBarChart");
         var datasets = [];
-        alert(response);
         for (var i = 0; i < response.data.length; i++) {
             var location = response.locationLabels[i];
             var data = response.data[i];
@@ -325,8 +318,11 @@
             datasets.push(dataObj);
         }
         
+        if (myBarChart !== null) {
+            myBarChart.destroy();
+        }
         
-        var myLineChart = new Chart(ctx, {
+        myBarChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: response.timeLabels,
@@ -354,6 +350,7 @@
                 }
             }
         });
+        myBarChart.update();
       });
     }
   </script>
