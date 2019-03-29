@@ -72,13 +72,13 @@
 
     <!-- Sidebar -->
     <ul class="sidebar navbar-nav" style="background-color:#464557">
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" href="index.html">
           <i class="fas fa-fw fa-calendar-check"></i>
           <span>Event Management</span>
         </a>
       </li>
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown active">
         <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-fw fa-chart-area"></i>
           <span>Analytics</span>
@@ -209,14 +209,14 @@
         <div class="card mb-3">
           <div class="card-header">
             <i class="fas fa-chart-area"></i>
-            Area Chart Example</div>
+            User Location & Date Time Analytics Chart at Scape</div>
           <div class="card-body">
             <canvas id="myBarChart" width="100%" height="30"></canvas>
           </div>
           <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
         </div>
 
-        <!-- DataTables Example -->
+<!--         DataTables Example 
         <div class="card mb-3">
           <div class="card-header">
             <i class="fas fa-table"></i>
@@ -226,7 +226,7 @@
             </div>
           </div>
           <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-        </div>
+        </div>-->
 
       </div>
       <!-- /.container-fluid -->
@@ -337,12 +337,20 @@
                 scales: {
                     xAxes: [
                         { 
-                            stacked: true 
+                            stacked: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Date Time'
+                             },
                         }
                     ],
                     yAxes: [
                         { 
                             stacked: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'No. of Users'
+                             },
                             ticks: {
                                 callback: function(value) {
                                     if (value % 1 === 0) {
