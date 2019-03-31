@@ -12,6 +12,10 @@
         <servlet-name>AnalyticsByTimeServlet</servlet-name>
         <servlet-class>controller.AnalyticsByTimeServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EventMgmtServlet</servlet-name>
+        <servlet-class>controller.EventMgmtServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LogoutController</servlet-name>
         <url-pattern>/LogoutController</url-pattern>
@@ -23,6 +27,10 @@
     <servlet-mapping>
         <servlet-name>AnalyticsByTimeServlet</servlet-name>
         <url-pattern>/AnalyticsByTimeServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EventMgmtServlet</servlet-name>
+        <url-pattern>/EventMgmtServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
