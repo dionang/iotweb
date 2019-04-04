@@ -39,6 +39,7 @@ public class AnalyticsByTimeServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/json;charset=UTF-8");
+        System.out.println("test");
         try (PrintWriter out = response.getWriter()) {
             String startDateTimeStr = request.getParameter("startDateTime");
             String endDateTimeStr = request.getParameter("endDateTime");
