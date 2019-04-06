@@ -34,7 +34,7 @@
         <!--============================= start of wrapper =============================-->
         <div id="wrapper">
             <%-- include sidebar --%>
-            <%@ include file="../templates/sidebar_eventmgmt.html" %>
+            <%@ include file="../templates/sidebar.jsp" %>
             <!--============================= start of events =============================-->
             <section class="main-block light-bg" style="width:100%;">
             <div class="container">

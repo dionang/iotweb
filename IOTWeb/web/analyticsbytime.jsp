@@ -19,8 +19,6 @@
 
   <!-- Custom styles for this template-->
   <link href="css/sb-admin.css" rel="stylesheet">
-
-  <link href="css/sb-admin.css" rel="stylesheet">
 </head>
 
 <body id="page-top">
@@ -30,7 +28,7 @@
   <div id="wrapper">
 
     <%-- include sidebar --%>
-    <%@ include file="../templates/sidebar_analytics.html" %>
+    <%@ include file="../templates/sidebar.jsp" %>
 
     <div id="content-wrapper">
 
@@ -217,6 +215,7 @@
   
   <script>
     window.onload = function() {
+        $('#dropdown').addClass('active');
         var date   = new Date();
         date       = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
         
