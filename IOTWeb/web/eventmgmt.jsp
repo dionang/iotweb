@@ -28,14 +28,7 @@
         <title>Event Management Page</title>
     </head>
     <body>
-        <script>
-        window.onload = function() {
-            getData();
-        }
-        function getData() {
-        }
-           
-        </script>
+        
         <%-- include navbar --%>
         <%@ include file="../templates/navbar.html" %>
         <!--============================= start of wrapper =============================-->
@@ -52,67 +45,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6 featured-responsive">
-                        <div class="featured-place-wrap">
-                            <a href="detail.html">
-                                <img src="images/event1.jpg" class="img-fluid" alt="#">
-                                
-                                <div class="featured-title-box">
-                                    <h6>Event at project way</h6>
-                                    <p>Media </p> <span>• </span>
-                                    <p>Education</p> <span>  </span>
-                                    <ul>
-                                        <li><span class="icon-location-pin"></span>
-                                            <p>Location: project way</p>
-                                        </li>
-                                        <li><span class="icon-screen-smartphone"></span>
-                                            <p>Date: 2019-03-20 12:00:00-2019-03-20 16:00:00</p>
-                                        </li>
-                                        <li><span class="icon-link"></span>
-                                            <p></p>
-                                        </li>
-
-                                    </ul>
-                                    <div class="bottom-icons">
-                                        <div class="open-now">OPEN FOR SIGN UP</div>
-                                        <span class="ti-heart"></span>
-                                        <span class="ti-bookmark"></span>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-md-6 featured-responsive">
-                        <div class="featured-place-wrap">
-                            <a href="detail.html">
-                                <img src="images/event2.jpg" class="img-fluid" alt="#">
-                                
-                                <div class="featured-title-box">
-                                    <h6>Burger & Lobster</h6>
-                                    <p>Music </p> <span>• </span>
-                                    <p>Dance</p> <span>  </span>
-                                    <ul>
-                                        <li><span class="icon-location-pin"></span>
-                                            <p>Location: labs</p>
-                                        </li>
-                                        <li><span class="icon-screen-smartphone"></span>
-                                            <p>Date: 2019-03-22 12:00:00-2019-03-22 16:00:00</p>
-                                        </li>
-                                        <li><span class="icon-link"></span>
-                                            <p></p>
-                                        </li>
-
-                                    </ul>
-                                    <div class="bottom-icons">
-                                        <div class="open-now">OPEN FOR SIGN UP</div>
-                                        <span class="ti-heart"></span>
-                                        <span class="ti-bookmark"></span>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
+                <div class="row" id="events">
+                    
                 </div>
             </div>
             </section>
@@ -137,7 +71,45 @@
         <!-- Demo scripts for this page-->
         <script src="js/demo/datatables-demo.js"></script>
         <script src="js/demo/chart-area-demo.js"></script>
-        
+        <script>
+        window.onload = function() {
+            getData();
+        }
+        function getData() {
+            $.post('EventMgmtServlet', {
+              }, function(response) {
+                  
+                  var events = JSON.parse(response);
+                  console.log(response);
+                  var wrapper = document.getElementById("events");
+                  var htmlData = '';
+                  events.forEach(function(event){
+                      console.log(event.startDateTime);
+                      var eventStartDateTime = event.startDateTime;
+                      var eventEndDateTime = event.endDateTime;
+                      var eventName = event.eventName;
+                      var eventLocation = event.location;
+                      var eventCategory = event.category;
+                      var eventImgSrc = "images/event1.jpg"; 
+                      if(eventLocation=="labs"){
+                          eventImgSrc = "images/event2.jpg";
+                      }
+                      htmlData += '<div class="col-md-6 featured-responsive"><div class="featured-place-wrap"><div class="featured-place-wrap">';
+                      htmlData += '<a href="#"><img src='+eventImgSrc+' class="img-fluid" alt="#"><div class="featured-title-box">';
+                      htmlData += '<h6>'+eventName+'</h6>';
+                      htmlData += '<span>• </span><p>'+eventCategory+' </p> ';
+                      htmlData += '<ul><li><span class="icon-location-pin"></span><p>Location: '+eventLocation+'</p></li>';
+                      htmlData += '<li><span class="icon-screen-smartphone"></span><p>Date:'+eventStartDateTime+'-'+eventEndDateTime+'</p></li></ul>';
+                      htmlData += '<div class="bottom-icons"><div class="open-now">OPEN FOR SIGN UP</div><span class="ti-heart"></span>';
+                      htmlData += '<span class="ti-bookmark"></span></div>';
+                      htmlData += '</div></a></div></div></div>';
+                  });
+                  wrapper.innerHTML = htmlData;
+              })
+              
+        }
+           
+        </script>
         
     </body>
 </html>

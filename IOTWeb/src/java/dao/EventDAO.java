@@ -28,30 +28,35 @@ public class EventDAO {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
+        ResultSet rs2 = null;
         try {
             conn = ConnectionManager.getConnection();
-            stmt = conn.prepareStatement("Select distinct eid from event;");
+            stmt = conn.prepareStatement("Select * from event;");
             rs = stmt.executeQuery();
+            
             while(rs.next()){
-                int eventId = rs.getInt("eid");
                 HashMap<String,String> eventsInfo = new HashMap<>();
+
+                int eventId = rs.getInt("eid");
+                
                 String eventName = rs.getString("eventName");
+                
                 eventsInfo.put("eventName",eventName);
                 stmt = conn.prepareStatement("Select category from eventcategory where eid = ?;");
                 stmt.setInt(1,eventId);
-                rs=stmt.executeQuery();
-                if(rs.next()){
-                    String category = rs.getString("category");
+                rs2=stmt.executeQuery();
+                if(rs2.next()){
+                    String category = rs2.getString("category");
                     eventsInfo.put("category",category);
                 }
                 
-                stmt = conn.prepareStatement("Select location, startDateTome, endDateTime from schedule where eid = ?;");
+                stmt = conn.prepareStatement("Select location, startDateTime, endDateTime from schedule where eid = ?;");
                 stmt.setInt(1,eventId);
-                rs=stmt.executeQuery();
-                if(rs.next()){
-                    String location = rs.getString("location");
-                    String startDateTime = rs.getString("startDateTime");
-                    String endDateTime = rs.getString("endDateTime");
+                rs2=stmt.executeQuery();
+                if(rs2.next()){
+                    String location = rs2.getString("location");
+                    String startDateTime = rs2.getString("startDateTime");
+                    String endDateTime = rs2.getString("endDateTime");
                     eventsInfo.put("location",location);
                     eventsInfo.put("startDateTime",startDateTime);
                     eventsInfo.put("endDateTime",endDateTime);

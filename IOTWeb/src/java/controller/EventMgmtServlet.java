@@ -39,12 +39,10 @@ public class EventMgmtServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try (PrintWriter out = response.getWriter()) {
-            
             ArrayList<HashMap<String,String>> resultList = EventDAO.getAllEvents();
             JsonArray data = new JsonArray();
             String result = new Gson().toJson(resultList);
-            result = "hello";
-            out.println("hello");
+            out.println(result); 
         }
     }
 
