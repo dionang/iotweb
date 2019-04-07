@@ -54,7 +54,7 @@
         </div>
         <!--============================= end of wrapper =============================-->
         <!-- Bootstrap core JavaScript-->
-        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/jquery/jquery.min.js" type="text/javascript"></script>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
         <!-- Core plugin JavaScript-->
@@ -72,9 +72,9 @@
         <script src="js/demo/datatables-demo.js"></script>
         <script src="js/demo/chart-area-demo.js"></script>
         <script>
-        window.onload = function() {
-            getData();
-        }
+		$(document).ready(function () {
+		  getData();
+		});
         function getData() {
             $.post('EventMgmtServlet', {
               }, function(response) {

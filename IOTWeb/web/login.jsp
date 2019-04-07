@@ -45,7 +45,7 @@
                         </label>
                       </div>
                     <div class="form-group">
-                        <button class="btn btn-primary btn-block" type="submit">Login</button>
+                    <button class="btn btn-primary btn-block" type="submit">Login</button>
                 </form>
                 <div class="text-center">
                     <a class="d-block small mt-3" href="register.jsp">Register an Account</a>

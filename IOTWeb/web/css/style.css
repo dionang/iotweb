@@ -63,6 +63,7 @@ p {
 /* ==============================================================
    HEADER
    ============================================================== */
+
 .nav-menu {
   position: absolute;
   z-index: 1;
@@ -105,10 +106,12 @@ p {
 
 @media (max-width: 992px) {
   .navbar-nav {
-    padding: 7px 20px; } }
+    padding: 0px 0px; } }
+    /*padding: 7px 20px; } }*/
 
 .nav-item {
-  margin: 0 20px 0 0; }
+    margin: 0 0px 0 0; }
+/*  margin: 0 20px 0 0; }*/
   .nav-item span {
     font-size: 10px;
     margin: 0 0 0 4px; }

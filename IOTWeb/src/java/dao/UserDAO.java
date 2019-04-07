@@ -69,6 +69,26 @@ public class UserDAO {
         }
     }
     
+    public static boolean registerAdmin(String email, String password) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            String hash = BCrypt.hashpw(password, BCrypt.gensalt());
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("insert into admin values (?, ?, ?)");
+            stmt.setString(1, email);
+            stmt.setString(2, email);
+            stmt.setString(3, hash);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+    }
+    
     public static boolean registerVisitor(String email, String name, int age, String gender, String password, ArrayList<String> preferences) {
         Connection conn = null;
         PreparedStatement stmt = null;

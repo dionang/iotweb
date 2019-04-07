@@ -9,7 +9,6 @@ import dao.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,10 +16,9 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Dion
+ * @author xuyin
  */
-@WebServlet(name = "AdminLoginController", urlPatterns = {"/AdminLoginController"})
-public class AdminLoginController extends HttpServlet {
+public class AdminRegisterController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,13 +35,13 @@ public class AdminLoginController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             String email     = request.getParameter("email");
             String password  = request.getParameter("password");
-            boolean success  = UserDAO.authenticateAdmin(email, password);
+            boolean success  = UserDAO.registerAdmin(email, password);
             if (success) {
                 HttpSession session = request.getSession();
                 session.setAttribute("email", email);
                 response.sendRedirect("eventmgmt.jsp");
             } else {
-                response.sendRedirect("login.jsp");
+                response.sendRedirect("register.jsp");
             }
         }
     }

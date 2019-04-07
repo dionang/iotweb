@@ -16,6 +16,14 @@
         <servlet-name>EventMgmtServlet</servlet-name>
         <servlet-class>controller.EventMgmtServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>java</servlet-name>
+        <servlet-class>AdminRegisterController.java</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AdminRegisterController</servlet-name>
+        <servlet-class>controller.AdminRegisterController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LogoutController</servlet-name>
         <url-pattern>/LogoutController</url-pattern>
@@ -31,6 +39,14 @@
     <servlet-mapping>
         <servlet-name>EventMgmtServlet</servlet-name>
         <url-pattern>/EventMgmtServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>java</servlet-name>
+        <url-pattern>/java</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminRegisterController</servlet-name>
+        <url-pattern>/AdminRegisterController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
