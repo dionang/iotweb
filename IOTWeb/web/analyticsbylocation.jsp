@@ -30,12 +30,12 @@
 
 <body id="page-top">
   <%-- include navbar --%>
-  <%@ include file="../templates/navbar.html" %>
+  <%@ include file="templates/navbar.html" %>
 
   <div id="wrapper">
 
     <%-- include sidebar --%>
-    <%@ include file="../templates/sidebar.jsp" %>
+    <%@ include file="templates/sidebar.jsp" %>
 
     <div id="content-wrapper">
 
