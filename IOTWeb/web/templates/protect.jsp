@@ -5,7 +5,6 @@
 --%>
 
 <%
-
     Object o = session.getAttribute("email");
     if(o == null){
         response.sendRedirect("login.jsp");

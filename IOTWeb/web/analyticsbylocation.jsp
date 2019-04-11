@@ -236,6 +236,13 @@
       var startDateTime = document.getElementById('startDateTime').value;
       var endDateTime   = document.getElementById('endDateTime').value;
       
+      var startDate = new Date(startDateTime);
+      var endDate = new Date(endDateTime);
+      if (startDate > endDate) {
+        alert("Time period not valid!");
+        return;
+      }
+      
       $.post('AnalyticsByTimeServlet', {
         startDateTime : startDateTime,
         endDateTime   : endDateTime

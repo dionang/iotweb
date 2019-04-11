@@ -9,14 +9,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -117,5 +113,120 @@ public class EventDAO {
         }
         
         return result;
+    }
+    
+    public static boolean createEvent(String eventName, String location, Timestamp startDateTime, Timestamp endDateTime, String[] eventCategories) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            
+            // check overlap schedules
+            boolean overlap = checkOverlappingSchedules(location, startDateTime, endDateTime);
+            if (overlap) {
+                throw new IllegalArgumentException("Schedules overlap!");
+            }
+            
+            // create an event
+            stmt = conn.prepareStatement("insert into event values (?, ?)");
+            stmt.setNull(1, Types.INTEGER);
+            stmt.setString(2, eventName);
+            stmt.executeUpdate();
+            
+            // get event id of created event
+            stmt = conn.prepareStatement("select max(eid) as last_eid FROM `event`");
+            rs = stmt.executeQuery();
+            int eid = 0;
+            if (rs.next()) {
+                eid = rs.getInt("last_eid");
+            }
+            // System.out.println("Eid: " + eid);
+            
+            // create schedule and add event categories and return success status
+            if(createSchedule(eid, location, startDateTime, endDateTime)){
+                return addEventCategories(eid, eventCategories);
+            } else {
+                return false;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+    }
+    
+    public static boolean checkOverlappingSchedules(String location, Timestamp startDateTime, Timestamp endDateTime) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("select * from schedule where location = ?");
+            stmt.setString(1, location);
+            rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                Timestamp otherStart = rs.getTimestamp("startDateTime");
+                Timestamp otherEnd   = rs.getTimestamp("endDateTime");
+
+                // checking overlap
+                if (startDateTime.before(otherEnd) && otherStart.before(endDateTime)) {
+                    return true;
+                }
+            }
+            
+            // if no overlaps, return false
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return true;
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+    }
+    
+    public static boolean createSchedule(int eid, String location, Timestamp startDateTime, Timestamp endDateTime) throws IllegalArgumentException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("insert into schedule values (?, ?, ?, ?)");
+            stmt.setInt(1, eid);
+            stmt.setString(2, location);
+            stmt.setTimestamp(3, startDateTime);
+            stmt.setTimestamp(4, endDateTime);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+    }
+    
+    public static boolean addEventCategories(int eid, String[] eventCategories) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            String statement = "insert into eventcategory values ";
+            for(String category : eventCategories){
+                statement += "(" + eid + ",'" + category + "'),"; 
+            }
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement(statement.substring(0, statement.length()-1));
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
     }
 }

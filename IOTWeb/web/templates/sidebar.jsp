@@ -1,4 +1,5 @@
 <!-- Sidebar -->
+<%@include file="protect.jsp"%>
 <ul class="sidebar navbar-nav" style="background-color:#464557">
   <li class="nav-item">
     <a class="nav-link" href="eventmgmt.jsp">
