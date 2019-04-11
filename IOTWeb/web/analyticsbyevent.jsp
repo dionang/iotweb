@@ -97,6 +97,14 @@
             <canvas id="preferencesPieChart" style="width:100%; height:30"></canvas>
           </div>
         </div>
+        <div class="card mb-3">
+          <div class="card-header">
+            <i class="fas fa-chart-area"></i>
+            Breakdown of Visitors Age Groups </div>
+          <div class="card-body">
+            <canvas id="ageBarChart" style="width:100%; height:30"></canvas>
+          </div>
+        </div>
       </div>
       <!-- /.container-fluid -->
     </div>
@@ -160,13 +168,14 @@
         eventName : eventName,
       }, function(response) {
         var colors = ['#008080', '#007FFF', '#FFBF00', '#8A2BE2', '#964B00', '#50C878', '#B57EDC', '#003153 ', '#C71585', '#C0C0C0']
-        plotLineChart(response, colors);
+        plotLineChart(response);
         plotPreferencePieChart(response, colors);
         plotGenderPieChart(response);
+        plotAgeBarChart(response, colors);
       });
     }
     
-    function plotLineChart(response, colors) {
+    function plotLineChart(response) {
         var myLineChart = null;
         var ctx = document.getElementById("myLineChart");
         var datasets = [{
@@ -273,6 +282,61 @@
             }
         });
         genderPieChart.update();
+    }
+    
+    function plotAgeBarChart(response, colors) {
+        var ageBarChart = null;
+        var ctx = document.getElementById("ageBarChart");
+        var datasets = [{
+            label: '# of visitors',
+            data : response.ageCounts,
+            backgroundColor: colors
+        }];
+        
+        if (ageBarChart !== null) {
+            ageBarChart.destroy();
+        }
+        
+        ageBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: response.ageBands,
+                datasets: datasets
+            },
+            options: {
+                elements: {
+                    line: {
+                        tension: 0
+                    }
+                },
+                scales: {
+                    xAxes: [
+                        { 
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Age Groups'
+                             },
+                        }
+                    ],
+                    yAxes: [
+                        { 
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'No. of Users'
+                             },
+                            ticks: {
+                                callback: function(value) {
+                                    if (value % 1 === 0) {
+                                        return value;
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        });
+        ageBarChart.update();
     }
   </script>
 </body>

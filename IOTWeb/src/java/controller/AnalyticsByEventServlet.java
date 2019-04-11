@@ -67,6 +67,12 @@ public class AnalyticsByEventServlet extends HttpServlet {
                         case 5:
                             result.add("genderCounts", dataArr);
                             break;
+                        case 6:
+                            result.add("ageBands", dataArr);
+                            break;
+                        case 7:
+                            result.add("ageCounts", dataArr);
+                            break;
                         default:
                             break;
                     }
@@ -74,7 +80,6 @@ public class AnalyticsByEventServlet extends HttpServlet {
                 
                 // add elements to json object
 //                result.add("data", data);
-                System.out.println(result.toString());
                 out.println(result.toString());
             } catch (ParseException ex) {
                 ex.printStackTrace();

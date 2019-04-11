@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -195,12 +196,15 @@ public class AnalyticsDAO {
         // 3 - list of # people with respective preferences at the event
         // 4 - list of genders (M, F)
         // 5 - list of # people with respective genders at the event
+        // 6 - list of age bands (<12, 12-14, ..)
+        // 7 - list of # people with respective age bands at the event
         ArrayList<ArrayList<String>> result = new ArrayList<>();
         Event event = getEventDetails(eventName);
         
         result.addAll(timeAnalyticsByEvent(event));
         result.addAll(preferenceAnalyticsByEvent(event));
         result.addAll(genderAnalyticsByEvent(event));
+        result.addAll(ageAnalyticsByEvent(event));
         
         System.out.println(result);
         return result;
@@ -320,6 +324,62 @@ public class AnalyticsDAO {
         }
         result.add(categoryList);
         result.add(countList);
+        return result;
+    }
+    
+    public static ArrayList<ArrayList<String>> ageAnalyticsByEvent(Event event){ // [[ages], [count of each age]]
+        ArrayList<ArrayList<String>> result = new ArrayList<>();
+        
+        // create two arrays, one for labels, one for counts
+        String[] ageBands = new String[] {"<12", "12-14", "15-16", "17-20", "21-24", "25-30", ">30"};
+        int[] counts = new int[7];
+
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH"); //2019-03-18 12:00:16
+        Date startDate = event.getStartDate();
+        Date endDate = event.getEndDate();
+        
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        HashMap<String, Integer> tempMap = new HashMap<>();
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("select age from visitor where email in (Select distinct email from reading where location like \"" + event.getLocation() + "\" and dateTime between \"" + sdf.format(startDate) + "\" and \"" + sdf.format(endDate) + "\")");
+            System.out.println(stmt);
+            rs = stmt.executeQuery();
+            while(rs.next()){
+                int age = rs.getInt("age");
+                if (age < 12) {
+                    counts[0]++;
+                } else if (age < 15) {
+                    counts[1]++;
+                } else if (age < 17) {
+                    counts[2]++;
+                } else if (age < 21) {
+                    counts[3]++;
+                } else if (age < 25) {
+                    counts[4]++;
+                } else if (age < 30) {
+                    counts[5]++;
+                } else {
+                    counts[6]++;
+                }
+            }
+            
+            ArrayList<String> countList = (ArrayList<String>) Arrays.stream(counts)
+                                                            .mapToObj(String::valueOf)
+                                                            .collect(Collectors.toList());
+            result.add(new ArrayList<>(Arrays.asList(ageBands)));
+            result.add(countList);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+        
         return result;
     }
     
