@@ -16,15 +16,15 @@ public class Event {
     private String eventName;
     private int eventId;
     private String location;
-    private ArrayList<String> eventPreferences;
+    private ArrayList<String> eventCategories;
     private Date startDate;
     private Date endDate;
 
-    public Event(String eventName, int eventId, String location, ArrayList<String> eventPreferences, Date startDate, Date endDate) {
+    public Event(String eventName, int eventId, String location, ArrayList<String> eventCategories, Date startDate, Date endDate) {
         this.eventName = eventName;
         this.eventId = eventId;
         this.location = location;
-        this.eventPreferences = eventPreferences;
+        this.eventCategories = eventCategories;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -48,9 +48,13 @@ public class Event {
     public String getLocation() {
         return location;
     }
-
-    public ArrayList<String> getEventPreferences() {
-        return eventPreferences;
+    
+    public void addCategory(String category){
+        eventCategories.add(category);
+    }
+    
+    public ArrayList<String> getEventCategories() {
+        return eventCategories;
     }
 
     public Date getStartDate() {

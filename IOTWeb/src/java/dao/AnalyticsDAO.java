@@ -13,9 +13,11 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,6 +49,8 @@ public class AnalyticsDAO {
         return result;
     }
     
+    
+    
     public static ArrayList<String> getAllLocations(){
         ArrayList<String> result = new ArrayList<>();
         Connection conn = null;
@@ -59,6 +63,29 @@ public class AnalyticsDAO {
             while(rs.next()){
                 String location = rs.getString("location");
                 result.add(location);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return result;
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+        
+        return result;
+    }
+    
+    public static ArrayList<String> getAllUserPreferences(){
+        ArrayList<String> result = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("Select distinct category from preferences order by category asc;");
+            rs = stmt.executeQuery();
+            while(rs.next()){
+                String category = rs.getString("category");
+                result.add(category);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -135,10 +162,10 @@ public class AnalyticsDAO {
             for (String locationName : result.get(1)){
                 if(tempResult.containsKey(sdf.parse(dateString)) && tempResult.get(sdf.parse(dateString)).get(locationName) != null){
                     dataList.get(locationList.indexOf(locationName)).add(("" + tempResult.get(sdf.parse(dateString)).get(locationName)));
-                    System.out.println("added " + tempResult.get(sdf.parse(dateString)).get(locationName));
+//                    System.out.println("added " + tempResult.get(sdf.parse(dateString)).get(locationName));
                 }else{
                     dataList.get(locationList.indexOf(locationName)).add(("0"));
-                    System.out.println("added 0");
+//                    System.out.println("added 0");
                 }
             }
         }
@@ -160,10 +187,29 @@ public class AnalyticsDAO {
         
     }
     
-    public static ArrayList<ArrayList<String>> analyticsByEvent(String eventName) throws ParseException{ // [[labels (time)], [count at event by time]]
+    
+    public static ArrayList<ArrayList<String>> analyticsByEvent(String eventName) throws ParseException{ // [[labels (time)], [count at event by time], [preferences], [count of each preference], [genders], [count of each gender]]
+        // 0 - list of timestamps
+        // 1 - list of # people at the respective time at the event
+        // 2 - list of preferences
+        // 3 - list of # people with respective preferences at the event
+        // 4 - list of genders (M, F)
+        // 5 - list of # people with respective genders at the event
+        ArrayList<ArrayList<String>> result = new ArrayList<>();
+        Event event = getEventDetails(eventName);
+        
+        result.addAll(timeAnalyticsByEvent(event));
+        result.addAll(preferenceAnalyticsByEvent(event));
+        result.addAll(genderAnalyticsByEvent(event));
+        
+        System.out.println(result);
+        return result;
+    }
+    
+    public static ArrayList<ArrayList<String>> timeAnalyticsByEvent(Event event) throws ParseException{ // [[labels (time)], [count at event by time]]
         ArrayList<ArrayList<String>> result = new ArrayList<>();
         
-        Event event = getEventDetails(eventName);
+        String eventName = event.getEventName();
         
         Date startDate = event.getStartDate();
         Date endDate = event.getEndDate();
@@ -233,6 +279,96 @@ public class AnalyticsDAO {
         return formattedResult;
     }
     
+    public static ArrayList<ArrayList<String>> preferenceAnalyticsByEvent(Event event){ // [[preferences], [count of each preference]]
+        ArrayList<ArrayList<String>> result = new ArrayList<>();
+        ArrayList<String> categoryList = getAllUserPreferences();
+        ArrayList<String> countList = new ArrayList<>();
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH"); //2019-03-18 12:00:16
+        Date startDate = event.getStartDate();
+        Date endDate = event.getEndDate();
+        
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        HashMap<String, Integer> tempMap = new HashMap<>();
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("select category, COUNT(category) as count from preferences where email in (Select distinct email from reading where location like \"" + event.getLocation() + "\" and dateTime between \"" + sdf.format(startDate) + "\" and \"" + sdf.format(endDate) + "\") group by category");
+            System.out.println(stmt);
+            rs = stmt.executeQuery();
+            while(rs.next()){
+                String categoryName = rs.getString("category");
+                int count = rs.getInt("count");
+                
+                tempMap.put(categoryName, count);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+        
+        for(String category : categoryList){
+            if(tempMap.containsKey(category)){
+                countList.add("" + tempMap.get(category));
+            }else{
+                countList.add("0");
+            }
+        }
+        result.add(categoryList);
+        result.add(countList);
+        return result;
+    }
+    
+    public static ArrayList<ArrayList<String>> genderAnalyticsByEvent(Event event){ // [[genders], [count of each gender]]
+        ArrayList<ArrayList<String>> result = new ArrayList<>();
+        ArrayList<String> genderList = new ArrayList<>();
+        genderList.add("M");
+        genderList.add("F");
+        ArrayList<String> countList = new ArrayList<>();
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH"); //2019-03-18 12:00:16
+        Date startDate = event.getStartDate();
+        Date endDate = event.getEndDate();
+        
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        HashMap<String, Integer> tempMap = new HashMap<>();
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("select gender, COUNT(gender) as count from visitor where email in (Select distinct email from reading where location like \"" + event.getLocation() + "\" and dateTime between \"" + sdf.format(startDate) + "\" and \"" + sdf.format(endDate) + "\") group by gender");
+            System.out.println(stmt);
+            rs = stmt.executeQuery();
+            while(rs.next()){
+                String genderName = rs.getString("gender");
+                int count = rs.getInt("count");
+                
+                tempMap.put(genderName, count);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+        
+        for(String gender : genderList){
+            if(tempMap.containsKey(gender)){
+                countList.add("" + tempMap.get(gender));
+            }else{
+                countList.add("0");
+            }
+        }
+        result.add(genderList);
+        result.add(countList);
+        return result;
+    }
+    
     public static Event getEventDetails(String eventName) throws ParseException{
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -255,6 +391,78 @@ public class AnalyticsDAO {
             ConnectionManager.close(conn, stmt, rs);
         }
         return null;
+    }
+    
+    public static Event updateEventCategories(Event event){
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+                
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("select category from eventCategory where eid like \"" + event.getEventId() + "\"");
+            System.out.println(stmt);
+            rs = stmt.executeQuery();
+            while(rs.next()){
+                event.addCategory(rs.getString("category"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+        
+        return event;
+    }
+    
+    public static String getWisdom(String eventName) throws ParseException{
+        Event event = getEventDetails(eventName);
+        event = updateEventCategories(event);
+        ArrayList<String> eventCategories = event.getEventCategories();
+        
+        ArrayList<ArrayList<String>> visitorPreferences = preferenceAnalyticsByEvent(event);
+        ArrayList<String> preferenceList = visitorPreferences.get(0);
+        ArrayList<String> visitorPreferenceData = visitorPreferences.get(1);
+        
+        HashMap<String, Integer> visitorPreferenceMap = new HashMap<>();
+        
+        
+        for(int i = 0; i < preferenceList.size(); i++){
+            visitorPreferenceMap.put(preferenceList.get(i), Integer.parseInt(visitorPreferenceData.get(i)));
+        }
+        
+        String bestPerformingPreference = "";
+        int bestPerformingNumber = 0;
+        
+        String worstPerformingPreference = "";
+        int worstPerformingNumber = Integer.MAX_VALUE;
+        
+        for(String visitorPreference : preferenceList){
+            if(eventCategories.contains(visitorPreference)){ //Checks for preferences that did not meet expectations
+                int count = visitorPreferenceMap.get(visitorPreference);
+                if(count < worstPerformingNumber){
+                    worstPerformingPreference = visitorPreference;
+                    worstPerformingNumber = count;
+                }
+            }else{ //Checks for preferences that werent accounted for
+                int count = visitorPreferenceMap.get(visitorPreference);
+                if(count > bestPerformingNumber){
+                    bestPerformingPreference = visitorPreference;
+                    bestPerformingNumber = count;
+                }
+            }
+        }
+        
+        String bestPerforming = "One unexpected preference of the visitors who participated in the event was: " + bestPerformingPreference + ", with " + bestPerformingNumber + " visitors. This event did not expect to attract so many visitors who were interested in this category.";
+        String worstPerforming = "Another unexpected preference of the visitors who participated in the event was: " + bestPerformingPreference + ", with " + bestPerformingNumber + " visitors. This event did not attract a significant number of visitors who were interested in this category";
+        
+        System.out.println(bestPerforming);
+        System.out.println(worstPerforming);
+        
+        
+        
+        return "";
     }
     
 }
