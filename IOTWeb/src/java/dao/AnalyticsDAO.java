@@ -400,8 +400,8 @@ public class AnalyticsDAO {
                 
         try {
             conn = ConnectionManager.getConnection();
-            stmt = conn.prepareStatement("select category from eventCategory where eid like \"" + event.getEventId() + "\"");
-            System.out.println(stmt);
+            stmt = conn.prepareStatement("select category from eventCategory where eid = ?");
+            stmt.setInt(1, event.getEventId());
             rs = stmt.executeQuery();
             while(rs.next()){
                 event.addCategory(rs.getString("category"));
@@ -455,12 +455,10 @@ public class AnalyticsDAO {
         }
         
         String bestPerforming = "One unexpected preference of the visitors who participated in the event was: " + bestPerformingPreference + ", with " + bestPerformingNumber + " visitors. This event did not expect to attract so many visitors who were interested in this category.";
-        String worstPerforming = "Another unexpected preference of the visitors who participated in the event was: " + bestPerformingPreference + ", with " + bestPerformingNumber + " visitors. This event did not attract a significant number of visitors who were interested in this category";
+        String worstPerforming = "Another unexpected preference of the visitors who participated in the event was: " + worstPerformingPreference + ", with " + worstPerformingNumber + " visitors. This event did not attract a significant number of visitors who were interested in this category";
         
         System.out.println(bestPerforming);
         System.out.println(worstPerforming);
-        
-        
         
         return "";
     }

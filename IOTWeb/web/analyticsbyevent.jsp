@@ -76,24 +76,29 @@
         <div class="card mb-3">
           <div class="card-header">
             <i class="fas fa-chart-area"></i>
-            User Location & Date Time Analytics Chart at Scape</div>
+            Number of Visitors During Event</div>
           <div class="card-body">
-            <canvas id="myLineChart" width="100%" height="30"></canvas>
+            <canvas id="myLineChart" style="width:100%; height:30"></canvas>
           </div>
-          <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+        </div>
+        <div class="card mb-3" style="width:49%; margin:1; float:right">
+          <div class="card-header">
+            <i class="fas fa-chart-area"></i>
+            Breakdown of Visitors Gender </div>
+          <div class="card-body">
+            <canvas id="genderPieChart" style="width:100%; height:30"></canvas>
+          </div>
+        </div>
+        <div class="card mb-3" style="width:49%; margin:1">
+          <div class="card-header">
+            <i class="fas fa-chart-area"></i>
+            Breakdown of Visitors Preferences </div>
+          <div class="card-body">
+            <canvas id="preferencesPieChart" style="width:100%; height:30"></canvas>
+          </div>
         </div>
       </div>
       <!-- /.container-fluid -->
-
-      <!-- Sticky Footer -->
-      <footer class="sticky-footer">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Copyright © Your Website 2019</span>
-          </div>
-        </div>
-      </footer>
-
     </div>
     <!-- /.content-wrapper -->
 
@@ -149,23 +154,27 @@
     }
     
     function getData() {
-      var myLineChart = null;
+      
       var eventName = document.getElementById('eventName').value;
       $.post('AnalyticsByEventServlet', {
         eventName : eventName,
       }, function(response) {
-        console.log(response);
         var colors = ['#008080', '#007FFF', '#FFBF00', '#8A2BE2', '#964B00', '#50C878', '#B57EDC', '#003153 ', '#C71585', '#C0C0C0']
+        plotLineChart(response, colors);
+        plotPreferencePieChart(response, colors);
+        plotGenderPieChart(response);
+      });
+    }
+    
+    function plotLineChart(response, colors) {
+        var myLineChart = null;
         var ctx = document.getElementById("myLineChart");
-        var datasets = [];
-        var dataObj = {
+        var datasets = [{
             label: '# of visitors',
             data : response.counts,
             borderColor: "#3e95cd",
             fill: false
-        };
-            
-        datasets.push(dataObj);
+        }];
         
         if (myLineChart !== null) {
             myLineChart.destroy();
@@ -211,7 +220,59 @@
             }
         });
         myLineChart.update();
-      });
+    }
+    
+    function plotPreferencePieChart(response, colors) {
+        var myPieChart = null;
+        var ctx = document.getElementById("preferencesPieChart");
+        var datasets = [{
+            label: '# of visitors',
+            data : response.preferenceCounts,
+            backgroundColor: colors
+        }];
+        
+        if (myPieChart !== null) {
+            myPieChart.destroy();
+        }
+        
+        myPieChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: response.preferences,
+                datasets: datasets
+            },
+            options: {
+            }
+        });
+        myPieChart.update();
+    }
+    
+    function plotGenderPieChart(response) {
+        var genderPieChart = null;
+        var ctx = document.getElementById("genderPieChart");
+        var datasets = [{
+            label: '# of visitors',
+            data : response.genderCounts,
+            backgroundColor: ['blue', 'red']
+//            borderColor: "#3e95cd",
+//            fill: false
+        }];
+        
+        console.log(datasets);
+        if (genderPieChart !== null) {
+            genderPieChart.destroy();
+        }
+        
+        genderPieChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Male', 'Female'],
+                datasets: datasets
+            },
+            options: {
+            }
+        });
+        genderPieChart.update();
     }
   </script>
 </body>

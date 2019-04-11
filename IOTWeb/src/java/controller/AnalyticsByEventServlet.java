@@ -48,13 +48,27 @@ public class AnalyticsByEventServlet extends HttpServlet {
                         dataArr.add(s);
                     }
                     
-                    if (i == 0) {
-                        result.add("timeLabels", dataArr);
-                    } else if (i == 1) {
-                        result.add("counts", dataArr);
-                    // from 2 onwards is the actual data
-                    } else {
-                        data.add(dataArr);
+                    switch (i) {
+                        case 0:
+                            result.add("timeLabels", dataArr);
+                            break;
+                        case 1:
+                            result.add("counts", dataArr);
+                            break;
+                        case 2:
+                            result.add("preferences", dataArr);
+                            break;
+                        case 3:
+                            result.add("preferenceCounts", dataArr);
+                            break;
+                        case 4:
+                            result.add("genders", dataArr);
+                            break;
+                        case 5:
+                            result.add("genderCounts", dataArr);
+                            break;
+                        default:
+                            break;
                     }
                 }
                 
