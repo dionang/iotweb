@@ -190,8 +190,8 @@
             var tr = document.createElement('tr');
             tr.innerHTML = '<td>' + event.eventName + '</td>' +
                 '<td>' + event.specific + '</td>' +
-                '<td>' + event.percentage + '</td>' +
-                '<td>' + event.total + '</td>';
+                '<td>' + event.total + '</td>' +
+                '<td>' + event.percentage + '</td>';
             tbody.appendChild(tr);
         }
 //        plotPieChart(response);
