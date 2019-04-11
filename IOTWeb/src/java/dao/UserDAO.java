@@ -103,14 +103,35 @@ public class UserDAO {
             stmt.setString(4, gender);
             stmt.setString(5, hash);
             stmt.executeUpdate();
-            return true;
+            return registerVisitorPreferences(email, preferences);
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         } finally {
             ConnectionManager.close(conn, stmt, rs);
         }
     }
     
+    public static boolean registerVisitorPreferences(String email, ArrayList<String> preferences){
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            String statement = "insert into preferences values ";
+            for(String preference : preferences){
+                statement += "(\"" + email + "\"," + preference + "),"; 
+            }
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement(statement.substring(0, statement.length()-1));
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+    }    
     public static String getLocationFromBeacon(String beaconId){
         String location = null;
         
