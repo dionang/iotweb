@@ -71,8 +71,10 @@
                 <input type="submit" name="analyticsByEvent" onclick="getData()" class="btn" style="border: solid #9F9F9F 1px;" value="Submit">
             </div>               
         </div>
-
-
+        <div>
+            Total number of participants: <span id="totalParticipants"></span>
+        </div>
+                    
         <!-- Area Chart Example-->
         <div class="card mb-3">
           <div class="card-header">
