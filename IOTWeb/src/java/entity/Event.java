@@ -35,6 +35,7 @@ public class Event {
         this.location = location;
         this.startDate = startDate;
         this.endDate = endDate;
+        eventCategories = new ArrayList<>();
     }
 
     public String getEventName() {

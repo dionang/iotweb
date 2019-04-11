@@ -37,7 +37,8 @@ public class AnalyticsByEventServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             String eventName = request.getParameter("eventName");
             try {
-                AnalyticsDAO.analyticsByEvent(eventName);
+                AnalyticsDAO.getWisdom(eventName);
+                
             } catch (ParseException ex) {
                 Logger.getLogger(AnalyticsByEventServlet.class.getName()).log(Level.SEVERE, null, ex);
                 ex.printStackTrace();
