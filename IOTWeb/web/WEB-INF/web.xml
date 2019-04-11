@@ -24,6 +24,10 @@
         <servlet-name>AdminRegisterController</servlet-name>
         <servlet-class>controller.AdminRegisterController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AnalyticsByEventServlet</servlet-name>
+        <servlet-class>controller.AnalyticsByEventServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LogoutController</servlet-name>
         <url-pattern>/LogoutController</url-pattern>
@@ -47,6 +51,10 @@
     <servlet-mapping>
         <servlet-name>AdminRegisterController</servlet-name>
         <url-pattern>/AdminRegisterController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AnalyticsByEventServlet</servlet-name>
+        <url-pattern>/AnalyticsByEventServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

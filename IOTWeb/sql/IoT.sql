@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.4
+-- version 4.7.7
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: Apr 03, 2019 at 08:22 AM
--- Server version: 5.7.24
--- PHP Version: 7.2.14
+-- Host: localhost:3306
+-- Generation Time: Apr 11, 2019 at 07:05 AM
+-- Server version: 5.6.38
+-- PHP Version: 7.2.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -19,8 +17,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `iot`
+-- Database: `IoT`
 --
+CREATE DATABASE IF NOT EXISTS `IoT` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `IoT`;
 
 -- --------------------------------------------------------
 
@@ -28,12 +28,10 @@ SET time_zone = "+00:00";
 -- Table structure for table `admin`
 --
 
-DROP TABLE IF EXISTS `admin`;
-CREATE TABLE IF NOT EXISTS `admin` (
+CREATE TABLE `admin` (
   `email` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `password` varchar(60) NOT NULL,
-  PRIMARY KEY (`email`)
+  `password` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -49,11 +47,9 @@ INSERT INTO `admin` (`email`, `name`, `password`) VALUES
 -- Table structure for table `beacon`
 --
 
-DROP TABLE IF EXISTS `beacon`;
-CREATE TABLE IF NOT EXISTS `beacon` (
+CREATE TABLE `beacon` (
   `bid` varchar(20) NOT NULL,
-  `location` varchar(20) NOT NULL,
-  PRIMARY KEY (`bid`)
+  `location` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -70,12 +66,10 @@ INSERT INTO `beacon` (`bid`, `location`) VALUES
 -- Table structure for table `event`
 --
 
-DROP TABLE IF EXISTS `event`;
-CREATE TABLE IF NOT EXISTS `event` (
-  `eid` int(20) NOT NULL AUTO_INCREMENT,
-  `eventName` varchar(20) NOT NULL,
-  PRIMARY KEY (`eid`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+CREATE TABLE `event` (
+  `eid` int(20) NOT NULL,
+  `eventName` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `event`
@@ -91,11 +85,9 @@ INSERT INTO `event` (`eid`, `eventName`) VALUES
 -- Table structure for table `eventcategory`
 --
 
-DROP TABLE IF EXISTS `eventcategory`;
-CREATE TABLE IF NOT EXISTS `eventcategory` (
+CREATE TABLE `eventcategory` (
   `eid` int(20) NOT NULL,
-  `category` varchar(20) NOT NULL,
-  PRIMARY KEY (`eid`,`category`)
+  `category` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -112,12 +104,26 @@ INSERT INTO `eventcategory` (`eid`, `category`) VALUES
 -- Table structure for table `preferences`
 --
 
-DROP TABLE IF EXISTS `preferences`;
-CREATE TABLE IF NOT EXISTS `preferences` (
+CREATE TABLE `preferences` (
   `email` varchar(30) NOT NULL,
-  `category` varchar(20) NOT NULL,
-  PRIMARY KEY (`email`,`category`)
+  `category` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `preferences`
+--
+
+INSERT INTO `preferences` (`email`, `category`) VALUES
+('dion', 'food'),
+('dion', 'music'),
+('dion', 'technology'),
+('jacky', 'dance'),
+('jacky', 'food'),
+('jacky', 'technology'),
+('moses', 'food'),
+('moses', 'gaming'),
+('moses', 'technology'),
+('t', 'food');
 
 -- --------------------------------------------------------
 
@@ -125,12 +131,10 @@ CREATE TABLE IF NOT EXISTS `preferences` (
 -- Table structure for table `reading`
 --
 
-DROP TABLE IF EXISTS `reading`;
-CREATE TABLE IF NOT EXISTS `reading` (
+CREATE TABLE `reading` (
   `location` varchar(30) NOT NULL,
   `datetime` datetime NOT NULL,
-  `email` varchar(30) NOT NULL,
-  PRIMARY KEY (`location`,`datetime`,`email`)
+  `email` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -774,13 +778,11 @@ INSERT INTO `reading` (`location`, `datetime`, `email`) VALUES
 -- Table structure for table `schedule`
 --
 
-DROP TABLE IF EXISTS `schedule`;
-CREATE TABLE IF NOT EXISTS `schedule` (
+CREATE TABLE `schedule` (
   `location` varchar(20) NOT NULL,
   `startDateTime` datetime NOT NULL,
   `endDateTime` datetime NOT NULL,
-  `eid` varchar(10) NOT NULL,
-  PRIMARY KEY (`location`,`startDateTime`,`endDateTime`,`eid`)
+  `eid` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -788,8 +790,8 @@ CREATE TABLE IF NOT EXISTS `schedule` (
 --
 
 INSERT INTO `schedule` (`location`, `startDateTime`, `endDateTime`, `eid`) VALUES
-('labs', '2019-03-20 12:00:00', '2019-03-20 16:00:00', '2'),
-('project way', '2019-03-18 12:00:00', '2019-03-18 16:00:00', '1');
+('labs', '2019-03-18 12:00:00', '2019-03-25 16:00:00', '2'),
+('project way', '2019-03-22 08:00:00', '2019-03-22 22:00:00', '1');
 
 -- --------------------------------------------------------
 
@@ -797,14 +799,12 @@ INSERT INTO `schedule` (`location`, `startDateTime`, `endDateTime`, `eid`) VALUE
 -- Table structure for table `visitor`
 --
 
-DROP TABLE IF EXISTS `visitor`;
-CREATE TABLE IF NOT EXISTS `visitor` (
+CREATE TABLE `visitor` (
   `email` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
   `age` int(11) NOT NULL,
   `gender` char(1) NOT NULL,
-  `password` varchar(60) NOT NULL,
-  PRIMARY KEY (`email`)
+  `password` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -812,10 +812,72 @@ CREATE TABLE IF NOT EXISTS `visitor` (
 --
 
 INSERT INTO `visitor` (`email`, `name`, `age`, `gender`, `password`) VALUES
-('dion', 'dion', 23, 'M', '$2a$10$R4gMEh/ywZNDguuetuqmAu5Zb.e.trYoNTjd1x9OsiDafSasncQCO'),
-('jacky', 'jacky', 23, 'M', '$2a$10$0unTedFd3DR2/KF9ZMIhfeK/DTLJ1ksKj1JQEN7Am/20w0VWT6v5C'),
-('moses', 'moses', 23, 'M', '$2a$10$80VZuswuzaeKnzFzTjqpNOwRdZ0mbKg/tkrn6WAHqV4og3UDvNju2');
-COMMIT;
+('dion', 'dion', 23, 'M', '$2a$10$3.TXPDPIjpXHa3HqCzh25OC1DMC4BlHb4wMn39uoX09Hw5FpsH0Wy'),
+('jacky', 'jacky', 24, 'M', '$2a$10$6IIGCFJAKCEH47bez8mMj.b6DaekxdaHr/Qfs7Jis0Kb1tbohu9Ua'),
+('moses', 'moses', 24, 'M', '$2a$10$RLT2mepd.U1CgIThovwy6OkBQMGAOe4zIRl.5qh0j8lwteVLLd4mu'),
+('t', 't', 24, 'M', '$2a$10$0b97F/HblSIKbck7QdJIxeSq8blsL5cA.vgAF/n.BfhCHVTLzV8l.');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`email`);
+
+--
+-- Indexes for table `beacon`
+--
+ALTER TABLE `beacon`
+  ADD PRIMARY KEY (`bid`);
+
+--
+-- Indexes for table `event`
+--
+ALTER TABLE `event`
+  ADD PRIMARY KEY (`eid`);
+
+--
+-- Indexes for table `eventcategory`
+--
+ALTER TABLE `eventcategory`
+  ADD PRIMARY KEY (`eid`,`category`);
+
+--
+-- Indexes for table `preferences`
+--
+ALTER TABLE `preferences`
+  ADD PRIMARY KEY (`email`,`category`);
+
+--
+-- Indexes for table `reading`
+--
+ALTER TABLE `reading`
+  ADD PRIMARY KEY (`location`,`datetime`,`email`);
+
+--
+-- Indexes for table `schedule`
+--
+ALTER TABLE `schedule`
+  ADD PRIMARY KEY (`location`,`startDateTime`,`endDateTime`,`eid`);
+
+--
+-- Indexes for table `visitor`
+--
+ALTER TABLE `visitor`
+  ADD PRIMARY KEY (`email`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `event`
+--
+ALTER TABLE `event`
+  MODIFY `eid` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

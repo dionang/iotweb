@@ -5,6 +5,7 @@
  */
 package dao;
 
+import entity.Event;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -158,4 +159,102 @@ public class AnalyticsDAO {
         return formattedResult;
         
     }
+    
+    public static ArrayList<ArrayList<String>> analyticsByEvent(String eventName) throws ParseException{ // [[labels (time)], [count at event by time]]
+        ArrayList<ArrayList<String>> result = new ArrayList<>();
+        
+        Event event = getEventDetails(eventName);
+        
+        Date startDate = event.getStartDate();
+        Date endDate = event.getEndDate();
+        
+        Date actualStartDate = startDate;
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH"); //2019-03-18 12:00:16
+        Calendar c = Calendar.getInstance();
+        c.setTime(startDate);
+        ArrayList<String> dateList = new ArrayList<>();
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        startDate = c.getTime();
+        while(startDate.before(endDate)){
+            dateList.add(sdf.format(startDate));
+            c.add(Calendar.HOUR, 1);
+            startDate = c.getTime();
+        }
+        
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        
+        HashMap<Date, Integer> tempMap = new HashMap<>();
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("Select concat(year(datetime),'-',month(datetime),'-',day(datetime),' ',HOUR(datetime)) as date, count(distinct email) as num from reading where location like \"" + event.getLocation() + "\" and dateTime between \"" + sdf.format(actualStartDate) + "\" and \"" + sdf.format(endDate) + "\" group by location, date");
+            System.out.println(stmt);
+            rs = stmt.executeQuery();
+            while(rs.next()){
+                Date date = sdf.parse(rs.getString("date"));
+                int num = rs.getInt("num");
+                
+                tempMap.put(date, num);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+        
+        ArrayList<String> countList = new ArrayList<>();
+        for(String date : dateList){
+            if(tempMap.containsKey(sdf.parse(date))){
+                countList.add("" + tempMap.get(sdf.parse(date)));
+            }else{
+                countList.add("0");
+            }
+        }
+        
+        
+        result.add(dateList);
+        result.add(countList);        
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd MMM - ha");
+        ArrayList<String> formattedDateList = new ArrayList<>();
+        for(String date : result.get(0)){
+            date = sdf1.format(sdf.parse(date));
+            formattedDateList.add(date);
+        }
+        ArrayList<ArrayList<String>> formattedResult = new ArrayList<>();
+        formattedResult.add(formattedDateList);
+        result.remove(0);
+        formattedResult.addAll(result);
+        System.out.println(formattedResult);
+        return formattedResult;
+    }
+    
+    public static Event getEventDetails(String eventName) throws ParseException{
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH");
+                
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("select * from schedule where eid in (select eid from event where eventName = \"" + eventName + "\") ");
+            System.out.println(stmt);
+            rs = stmt.executeQuery();
+            while(rs.next()){
+                Event event = new Event(eventName, rs.getInt("eid"), rs.getString("location"), sdf.parse(rs.getString("startDateTime")), sdf.parse(rs.getString("endDateTime")));
+                return event;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+        return null;
+    }
+    
 }
