@@ -72,6 +72,7 @@
             </div>               
         </div>
 
+
         <!-- Area Chart Example-->
         <div class="card mb-3">
           <div class="card-header">
@@ -160,13 +161,17 @@
     window.onload = function() {
         getData();
     }
+    var myLineChart = null;
+    var myPieChart = null;
+    var genderPieChart = null;
+    var ageBarChart = null;
     
     function getData() {
-      
       var eventName = document.getElementById('eventName').value;
       $.post('AnalyticsByEventServlet', {
         eventName : eventName,
       }, function(response) {
+        document.getElementById('totalParticipants').innerHTML = response.totalParticipants;
         var colors = ['#008080', '#007FFF', '#FFBF00', '#8A2BE2', '#964B00', '#50C878', '#B57EDC', '#003153 ', '#C71585', '#C0C0C0']
         plotLineChart(response);
         plotPreferencePieChart(response, colors);
@@ -176,7 +181,6 @@
     }
     
     function plotLineChart(response) {
-        var myLineChart = null;
         var ctx = document.getElementById("myLineChart");
         var datasets = [{
             label: '# of visitors',
@@ -232,7 +236,6 @@
     }
     
     function plotPreferencePieChart(response, colors) {
-        var myPieChart = null;
         var ctx = document.getElementById("preferencesPieChart");
         var datasets = [{
             label: '# of visitors',
@@ -257,7 +260,6 @@
     }
     
     function plotGenderPieChart(response) {
-        var genderPieChart = null;
         var ctx = document.getElementById("genderPieChart");
         var datasets = [{
             label: '# of visitors',
@@ -285,7 +287,6 @@
     }
     
     function plotAgeBarChart(response, colors) {
-        var ageBarChart = null;
         var ctx = document.getElementById("ageBarChart");
         var datasets = [{
             label: '# of visitors',

@@ -25,6 +25,12 @@
       <span>Analytics by event</span>
     </a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="getrelevantevents.jsp">
+      <i class="fas fa-person-booth"></i>
+      <span>Get Relevant Events</span>
+    </a>
+  </li>
 </ul>
 <!-- Bootstrap core JavaScript-->
 <script src="vendor/jquery/jquery.min.js" type="text/javascript"></script>

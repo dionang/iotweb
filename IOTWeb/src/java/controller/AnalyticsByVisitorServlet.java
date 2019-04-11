@@ -5,6 +5,8 @@
  */
 package controller;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import dao.AnalyticsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -32,34 +34,46 @@ public class AnalyticsByVisitorServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("text/json;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             String gender = request.getParameter("gender");
-            if(gender == null){
+            if(gender.isEmpty()){
                 gender = "%";
             }
             
             String minAge = request.getParameter("minAge");
-            if(minAge == null){
+            if(minAge.isEmpty()){
                 minAge = "0";
             }
             
             String maxAge = request.getParameter("maxAge");
-            if(maxAge == null){
+            if(maxAge.isEmpty()){
                 maxAge = "100";
             }
             
-            String[] categoriesArr = request.getParameterValues("categories");
+            String[] categoriesArr = request.getParameter("categories").split(",");
+            
+            
             ArrayList<String> categories = new ArrayList<>();
             if(categoriesArr != null){
                 categories = new ArrayList<>(Arrays.asList(categoriesArr));
             }
             
-            System.out.println(categories);
+            ArrayList<ArrayList<String>> resultList = AnalyticsDAO.analyticsByVisitorCharacteristics(gender, minAge, maxAge, categories);
+            JsonObject result = new JsonObject();
+            String[] properties = new String[] { "eventName", "specific", "percentage", "total" };
             
-            ArrayList<ArrayList<String>> result = AnalyticsDAO.analyticsByVisitorCharacteristics(gender, minAge, maxAge, categories);
-            System.out.println(result);
+            JsonArray dataArr = new JsonArray();
+            for (int i = 0; i < resultList.get(0).size(); i++) {
+                JsonObject eventObj = new JsonObject();
+                for (int j = 0; j < resultList.size(); j++) {
+                    eventObj.addProperty(properties[j], resultList.get(j).get(i));
+                }
+                dataArr.add(eventObj);
+            }
             
+            result.add("data", dataArr);
+            out.println(result.toString());
         }catch (Exception e){
             e.printStackTrace();
         }

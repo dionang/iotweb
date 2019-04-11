@@ -41,7 +41,6 @@ public class AnalyticsByEventServlet extends HttpServlet {
                 ArrayList<ArrayList<String>> analyticsByEvent = AnalyticsDAO.analyticsByEvent(eventName);
                 JsonObject result = new JsonObject();
                 
-                JsonArray data = new JsonArray();
                 for (int i = 0; i < analyticsByEvent.size(); i++) {
                     JsonArray dataArr = new JsonArray();
                     for (String s : analyticsByEvent.get(i)) {
@@ -78,8 +77,7 @@ public class AnalyticsByEventServlet extends HttpServlet {
                     }
                 }
                 
-                // add elements to json object
-//                result.add("data", data);
+                result.addProperty("totalParticipants", AnalyticsDAO.getNumberOfVisitors(eventName));
                 out.println(result.toString());
             } catch (ParseException ex) {
                 ex.printStackTrace();
