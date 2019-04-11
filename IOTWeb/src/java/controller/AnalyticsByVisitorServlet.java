@@ -52,8 +52,7 @@ public class AnalyticsByVisitorServlet extends HttpServlet {
             }
             
             String[] categoriesArr = request.getParameter("categories").split(",");
-            String[] allCategories = new String[]{"food", "technology", "gaming", "dance", "music"};
-            ArrayList<String> categories = new ArrayList<>(Arrays.asList(allCategories));
+            ArrayList<String> categories = new ArrayList<>(Arrays.asList());
             if(request.getParameter("categories").length() > 0){
                 categories = new ArrayList<>(Arrays.asList(categoriesArr));
             }
