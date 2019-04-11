@@ -75,6 +75,17 @@ public class AnalyticsDAO {
         return result;
     }
     
+    public static ArrayList<String> getAllEventCategories(){
+        ArrayList<String> result = new ArrayList<>();
+        result.add("food");
+        result.add("technology");
+        result.add("music");
+        result.add("dance");
+        result.add("gaming");
+        
+        return result;
+    }
+    
     public static ArrayList<String> getAllUserPreferences(){
         ArrayList<String> result = new ArrayList<>();
         Connection conn = null;
@@ -522,5 +533,95 @@ public class AnalyticsDAO {
         
         return "";
     }
+    
+    public static ArrayList<ArrayList<String>> analyticsByVisitorCharacteristics(String gender, String minAge, String maxAge, ArrayList<String> categories) throws ParseException{
+        ArrayList<ArrayList<String>> result = new ArrayList<>();
+        ArrayList<String> eventNameList = new ArrayList<>();
+        ArrayList<String> specificVisitorsList = new ArrayList<>();
+        ArrayList<String> totalVisitorsList = new ArrayList<>();
+        
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+                
+        try {
+            conn = ConnectionManager.getConnection();
+            String statement = "select *, count(distinct email) as count from (select r.location, r.email, s.eid from reading r right outer join schedule s on r.location = s.location and r.datetime between s.startDateTime and s.endDateTime group by r.email, eid having r.email in (select email from visitor ";
+            boolean first = true;
+            
+            if(categories.size() > 0){
+                first = false;
+                statement += "where email in (select email from preferences where category = \"" + categories.get(0) + "\")";
+                for(int i = 1; i < categories.size(); i++){
+                    statement += "and email in (select email from preferences where category = \"" + categories.get(i) + "\")";
+                }
+            }
+            
+            if(first){
+                first = false;
+                statement += "where ";
+            }else{
+                statement += "and ";
+            }
+            statement += "age between " + minAge + " and " + maxAge + " and gender like \"" + gender + "\")) as temp2 join event e on e.eid = temp2.eid group by e.eid order by count desc"; 
+            
+            
+            stmt = conn.prepareStatement(statement);
+            System.out.println(stmt);
+            rs = stmt.executeQuery();
+            while(rs.next()){
+                String eventName = rs.getString("eventName");
+                eventNameList.add(eventName);
+                specificVisitorsList.add("" +rs.getInt("count"));
+                totalVisitorsList.add("" + getNumberOfVisitors(eventName));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+        
+        result.add(eventNameList);
+        result.add(specificVisitorsList);
+        
+        ArrayList<String> percentageUsersList = new ArrayList<>();
+        for(int i = 0; i < specificVisitorsList.size(); i++){
+            int specificCount = Integer.parseInt(specificVisitorsList.get(i));
+            int totalCount = Integer.parseInt(totalVisitorsList.get(i));
+            percentageUsersList.add("" + (100.0 * specificCount / totalCount) + "%");
+        }
+        result.add(percentageUsersList);
+        result.add(totalVisitorsList);
+        return result;
+    }
+    
+    public static int getNumberOfVisitors(String eventName) throws ParseException{
+        Event event = getEventDetails(eventName);
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH"); //2019-03-18 12:00:16
+        
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+                
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("Select count(distinct email) as count from reading where location like \"" + event.getLocation() + "\" and dateTime between \"" + new java.sql.Timestamp(event.getStartDate().getTime()) + "\" and \"" + new java.sql.Timestamp(event.getEndDate().getTime()) + "\" group by location");
+            System.out.println(stmt);
+            rs = stmt.executeQuery();
+            while(rs.next()){
+                return rs.getInt("count");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+        
+        return 0;
+    }
+    
     
 }
