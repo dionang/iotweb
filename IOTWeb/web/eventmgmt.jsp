@@ -30,11 +30,11 @@
     <body>
         
         <%-- include navbar --%>
-        <%@ include file="../templates/navbar.html" %>
+        <%@ include file="templates/navbar.html" %>
         <!--============================= start of wrapper =============================-->
         <div id="wrapper">
             <%-- include sidebar --%>
-            <%@ include file="../templates/sidebar.jsp" %>
+            <%@ include file="templates/sidebar.jsp" %>
             <!--============================= start of events =============================-->
             <section class="main-block light-bg" style="width:100%;">
             <div class="container">

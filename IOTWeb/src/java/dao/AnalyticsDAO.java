@@ -553,14 +553,14 @@ public class AnalyticsDAO {
                 first = false;
                 statement += "where email in (select email from preferences where category = \"" + categories.get(0) + "\")";
                 for(int i = 1; i < categories.size(); i++){
-                    statement += "and email in (select email from preferences where category = \"" + categories.get(i) + "\")";
+                    statement += " and email in (select email from preferences where category = \"" + categories.get(i) + "\")";
                 }
             }
             
             if(first){
                 first = false;
                 statement += "where ";
-            }else{
+            } else{
                 statement += "and ";
             }
             statement += "age between " + minAge + " and " + maxAge + " and gender like \"" + gender + "\")) as temp2 join event e on e.eid = temp2.eid group by e.eid order by count desc"; 
