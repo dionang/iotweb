@@ -103,8 +103,32 @@ public class UserDAO {
             stmt.setString(4, gender);
             stmt.setString(5, hash);
             stmt.executeUpdate();
+            return registerVisitorPreferences(email, preferences);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+    }
+    
+    public static boolean registerVisitorPreferences(String email, ArrayList<String> preferences){
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            String statement = "insert into preferences values ";
+            for(String preference : preferences){
+                statement += "(\"" + email + "\", " + preference + "),";
+            }
+            statement = statement.substring(0, statement.length()-1);
+            System.out.println(statement);
+            stmt = conn.prepareStatement(statement);
+            stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         } finally {
             ConnectionManager.close(conn, stmt, rs);
@@ -157,6 +181,7 @@ public class UserDAO {
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         } finally {
             ConnectionManager.close(conn, stmt, rs);
