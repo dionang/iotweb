@@ -180,9 +180,9 @@
             var location = response.locationLabels[i];
             var data = response.data[i];
             var dataObj = {
-                'label': location,
-                'data' : data,
-                'backgroundColor' : colors[i]
+                label: location,
+                data : data,
+                backgroundColor : colors[i]
             };
             
             datasets.push(dataObj);

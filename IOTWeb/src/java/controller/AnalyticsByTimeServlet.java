@@ -14,8 +14,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.TreeMap;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +37,6 @@ public class AnalyticsByTimeServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/json;charset=UTF-8");
-        System.out.println("test");
         try (PrintWriter out = response.getWriter()) {
             String startDateTimeStr = request.getParameter("startDateTime");
             String endDateTimeStr = request.getParameter("endDateTime");
@@ -56,9 +53,6 @@ public class AnalyticsByTimeServlet extends HttpServlet {
                 ArrayList<ArrayList<String>> resultList = AnalyticsDAO.analyticsByTime(startDateTime, endDateTime);
                 
                 JsonObject result = new JsonObject();
-                ArrayList<String> timeLabels = resultList.get(0);
-                ArrayList<String> locationLabels = resultList.get(1);
-                
                 JsonArray data = new JsonArray();
                 for (int i = 0; i < resultList.size(); i++) {
                     JsonArray dataArr = new JsonArray();
@@ -81,7 +75,7 @@ public class AnalyticsByTimeServlet extends HttpServlet {
                 
                 out.println(result.toString());
             } catch (ParseException ex) {
-                
+                ex.printStackTrace();
             }
         }
     }

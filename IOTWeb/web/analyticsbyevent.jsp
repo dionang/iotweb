@@ -78,7 +78,7 @@
             <i class="fas fa-chart-area"></i>
             User Location & Date Time Analytics Chart at Scape</div>
           <div class="card-body">
-            <canvas id="myBarChart" width="100%" height="30"></canvas>
+            <canvas id="myLineChart" width="100%" height="30"></canvas>
           </div>
           <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
         </div>
@@ -144,68 +144,73 @@
   <script src="js/demo/chart-area-demo.js"></script>
   
   <script>
+    window.onload = function() {
+        getData();
+    }
+    
     function getData() {
+      var myLineChart = null;
       var eventName = document.getElementById('eventName').value;
       $.post('AnalyticsByEventServlet', {
         eventName : eventName,
       }, function(response) {
-          console.log(response);
-//        var colors = ['#008080', '#007FFF', '#FFBF00', '#8A2BE2', '#964B00', '#50C878', '#B57EDC', '#003153 ', '#C71585', '#C0C0C0']
-//        var ctx = document.getElementById("myBarChart");
-//        var datasets = [];
-//        for (var i = 0; i < response.data.length; i++) {
-//            var location = response.locationLabels[i];
-//            var data = response.data[i];
-//            var dataObj = {
-//                'label': location,
-//                'data' : data,
-//                'backgroundColor' : colors[i]
-//            };
-//            
-//            datasets.push(dataObj);
-//        }
-//        
-//        if (myBarChart !== null) {
-//            myBarChart.destroy();
-//        }
-//        
-//        myBarChart = new Chart(ctx, {
-//            type: 'bar',
-//            data: {
-//                labels: response.timeLabels,
-//                datasets: datasets
-//            },
-//            options: {
-//                scales: {
-//                    xAxes: [
-//                        { 
-//                            stacked: true,
-//                            scaleLabel: {
-//                                display: true,
-//                                labelString: 'Date Time'
-//                             },
-//                        }
-//                    ],
-//                    yAxes: [
-//                        { 
-//                            stacked: true,
-//                            scaleLabel: {
-//                                display: true,
-//                                labelString: 'No. of Users'
-//                             },
-//                            ticks: {
-//                                callback: function(value) {
-//                                    if (value % 1 === 0) {
-//                                        return value;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    ]
-//                }
-//            }
-//        });
-//        myBarChart.update();
+        console.log(response);
+        var colors = ['#008080', '#007FFF', '#FFBF00', '#8A2BE2', '#964B00', '#50C878', '#B57EDC', '#003153 ', '#C71585', '#C0C0C0']
+        var ctx = document.getElementById("myLineChart");
+        var datasets = [];
+        var dataObj = {
+            label: '# of visitors',
+            data : response.counts,
+            borderColor: "#3e95cd",
+            fill: false
+        };
+            
+        datasets.push(dataObj);
+        
+        if (myLineChart !== null) {
+            myLineChart.destroy();
+        }
+        
+        myLineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: response.timeLabels,
+                datasets: datasets
+            },
+            options: {
+                elements: {
+                    line: {
+                        tension: 0
+                    }
+                },
+                scales: {
+                    xAxes: [
+                        { 
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Date Time'
+                             },
+                        }
+                    ],
+                    yAxes: [
+                        { 
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'No. of Users'
+                             },
+                            ticks: {
+                                callback: function(value) {
+                                    if (value % 1 === 0) {
+                                        return value;
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        });
+        myLineChart.update();
       });
     }
   </script>

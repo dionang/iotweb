@@ -5,12 +5,13 @@
  */
 package controller;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import dao.AnalyticsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,14 +34,35 @@ public class AnalyticsByEventServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("text/json;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             String eventName = request.getParameter("eventName");
             try {
-                AnalyticsDAO.getWisdom(eventName);
+                ArrayList<ArrayList<String>> analyticsByEvent = AnalyticsDAO.analyticsByEvent(eventName);
+                JsonObject result = new JsonObject();
                 
+                JsonArray data = new JsonArray();
+                for (int i = 0; i < analyticsByEvent.size(); i++) {
+                    JsonArray dataArr = new JsonArray();
+                    for (String s : analyticsByEvent.get(i)) {
+                        dataArr.add(s);
+                    }
+                    
+                    if (i == 0) {
+                        result.add("timeLabels", dataArr);
+                    } else if (i == 1) {
+                        result.add("counts", dataArr);
+                    // from 2 onwards is the actual data
+                    } else {
+                        data.add(dataArr);
+                    }
+                }
+                
+                // add elements to json object
+//                result.add("data", data);
+                System.out.println(result.toString());
+                out.println(result.toString());
             } catch (ParseException ex) {
-                Logger.getLogger(AnalyticsByEventServlet.class.getName()).log(Level.SEVERE, null, ex);
                 ex.printStackTrace();
             }
         }
