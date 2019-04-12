@@ -39,10 +39,8 @@
             <section class="main-block light-bg" style="width:100%;">
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-md-5">
-                        <div class="styled-heading">
-                            <h3>Featured Events at Scape</h3>
-                        </div>
+                    <div class="styled-heading">
+                        <h3>Featured Events at Scape</h3>
                     </div>
                 </div>
                 <div class="row justify-content-center" id="events">

@@ -278,13 +278,13 @@ p {
    ============================================================== */
 .styled-heading {
   text-align: center;
-  margin: 0 0 50px; }
+  margin: 0 0 20px; }
   @media (max-width: 768px) {
     .styled-heading {
-      margin: 0 0 30px; } }
+      margin: 0 0 15px; } }
   .styled-heading h3 {
     position: relative;
-    padding: 0 0 23px; }
+    padding: 0 0 20px; }
     .styled-heading h3:after {
       position: absolute;
       content: "";

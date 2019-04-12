@@ -48,32 +48,14 @@
     <%@ include file="templates/sidebar.jsp" %>
 
     <div id="content-wrapper">
-
       <div class="container-fluid">
-
-        <!-- Breadcrumbs-->
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <a href="#">Dashboard</a>
-          </li>
-          <li class="breadcrumb-item active">Overview</li>
-        </ol>
-        
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-5">
-                    <div class="styled-heading">
-                        <h3>Select event categories & user info.</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-center" id="events">
-
+        <div class="row justify-content-center">
+            <div class="styled-heading">
+                <h3>Select event categories & user info.</h3>
             </div>
         </div>
 
         <div class="row justify-content-center">
-            
                 <div class="form-group row justify-content-center">
                     <div class="col-md-2 text-center">
                     <label class="image-checkbox">
@@ -213,12 +195,7 @@
   <script src="js/demo/chart-area-demo.js"></script>
   
   <script>
-    window.onload = function() {
-        getData();
-    }
-    
     function getData() {
-//      var categories = document.getElementById('eventName').value;
       var categories = [];
       if (document.getElementById('food').checked) categories.push("food");
       if (document.getElementById('technology').checked) categories.push("technology");
