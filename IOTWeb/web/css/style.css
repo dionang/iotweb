@@ -108,13 +108,14 @@ p {
   .navbar-nav {
     padding: 0px 0px; } }
     /*padding: 7px 20px; } }*/
-
+/*
 .nav-item {
     margin: 0 0px 0 0; }
-/*  margin: 0 20px 0 0; }*/
+/*  margin: 0 20px 0 0; }*//*
   .nav-item span {
     font-size: 10px;
-    margin: 0 0 0 4px; }
+    margin: 0 0 0 0px; } */
+    /*margin: 0 0 0 4px; }*/
 
 .bg {
   width: 100%;
@@ -965,3 +966,4 @@ footer {
   width: 100%; }
 
 /*# sourceMappingURL=style.css.map */
+/*checkbox*/

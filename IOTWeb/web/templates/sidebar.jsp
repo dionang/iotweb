@@ -2,26 +2,32 @@
 <%@include file="protect.jsp"%>
 <ul class="sidebar navbar-nav" style="background-color:#464557">
   <li class="nav-item">
-    <a class="nav-link" href="getrelevantevents.jsp">
-      <i class="fas fa-calendar-plus"></i>
+    <a class="nav-link" href="addevent.jsp">
+      <i class="fas fa-plus"></i>
       <span>Create Events</span>
     </a>
   </li>
   <li class="nav-item">
+    <a class="nav-link" href="getrelevantevents.jsp">
+      <i class="fas fa-calendar-alt"></i>
+      <span>View Events</span>
+    </a>
+  </li>
+  <li class="nav-item">
     <a class="nav-link" href="eventmgmt.jsp">
-      <i class="fas fa-fw fa-calendar-check"></i>
-      <span>Event Management</span>
+      <i class="fas fa-fw fa-star"></i>
+      <span>Featured Events</span>
     </a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="analyticsbytime.jsp">
-      <i class="fas fa-fw fa-user-clock"></i>
+      <i class="fas fa-fw fa-chart-bar"></i>
       <span>Analytics by time</span>
     </a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="analyticsbyevent.jsp">
-      <i class="fas fa-person-booth"></i>
+      <i class="fas fa-chart-line"></i>
       <span>Analytics by event</span>
     </a>
   </li>

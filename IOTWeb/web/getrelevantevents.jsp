@@ -30,6 +30,12 @@
 
   <!-- Custom styles for this template-->
   <link href="css/sb-admin.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500,700,900" rel="stylesheet">
+  <!-- Hover Effects -->
+  <link rel="stylesheet" href="css/set1.css">
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body id="page-top">
@@ -52,18 +58,62 @@
           </li>
           <li class="breadcrumb-item active">Overview</li>
         </ol>
-
-        <div class='row'>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label>Event Categories:</label><br/>
-                    <input type="checkbox" id="food" value="food"> Food<br/>
-                    <input type="checkbox" id="technology" value="technology"> Technology<br/>
-                    <input type="checkbox" id="gaming" value="gaming"> Gaming <br/>
-                    <input type="checkbox" id="dance" value="dance"> Dance <br/>
-                    <input type="checkbox" id="music" value="music"> Music <br/>
-                </div> 
+        
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-5">
+                    <div class="styled-heading">
+                        <h3>Select event categories & user info.</h3>
+                    </div>
+                </div>
             </div>
+            <div class="row justify-content-center" id="events">
+
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+                
+                    <div class="col-md-2 text-center">
+                    <label class="image-checkbox">
+                        <img src="images/food_cat.jpg" height="80" width="100"/>
+                        <input type="checkbox" id="food" value="food"> 
+                        <h6>Food</h6>
+                    </label>
+                    </div>
+                    <div class="col-md-2 text-center">
+                    <label class="image-checkbox">
+                        <img src="images/tech_cat.jpg" height="80" width="100"/>
+                        <input type="checkbox" id="technology" value="technology"> 
+                        <h6>Technology</h6>
+                    </label>
+                    </div>
+                    <div class="col-md-2 text-center">
+                    <label class="image-checkbox">
+                        <img src="images/gaming_cat.jpg" height="80" width="100"/>
+                        <input type="checkbox" id="gaming" value="gaming"> 
+                        <h6>Gaming</h6>
+                    </label>
+                    </div>
+                    <div class="col-md-2 text-center">
+                    <label class="image-checkbox">
+                        <img src="images/dance_cat.jpg" height="80" width="100"/>
+                        <input type="checkbox" id="dance" value="dance"> 
+                        <h6>Dance</h6>
+                    </label>
+                    </div>
+                    <div class="col-md-2 text-center">
+                    <label class="image-checkbox">
+                        <img src="images/music_cat.jpg" height="80" width="100"/>
+                        <input type="checkbox" id="music" value="music"> 
+                        <h6>Music</h6>
+                    </label>
+                    </div>
+                    
+            
+        </div>
+        
+        <div class="row justify-content-center">
             <div class="col-md-2">
                 <div class="form-group">
                     <label>Min Age:</label>
@@ -227,6 +277,54 @@
     }
     
   </script>
+  <script type="text/javascript">
+    jQuery(function ($) {
+        // init the state from the input
+        $(".image-checkbox").each(function () {
+            if ($(this).find('input[type="checkbox"]').first().attr("checked")) {
+                $(this).addClass('image-checkbox-checked');
+            }
+            else {
+                $(this).removeClass('image-checkbox-checked');
+            }
+        });
+
+        // sync the state to the input
+        $(".image-checkbox").on("click", function (e) {
+            if ($(this).hasClass('image-checkbox-checked')) {
+                $(this).removeClass('image-checkbox-checked');
+                $(this).find('input[type="checkbox"]').first().removeAttr("checked");
+            }
+            else {
+                $(this).addClass('image-checkbox-checked');
+                $(this).find('input[type="checkbox"]').first().attr("checked", "checked");
+            }
+
+            e.preventDefault();
+        });
+    });
+  </script>
+  <style>
+    .image-checkbox
+    {
+        cursor: pointer;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        border: 4px solid transparent;
+        outline: 0;
+    }
+
+        .image-checkbox input[type="checkbox"]
+        {
+            display: none;
+        }
+
+    .image-checkbox-checked
+    {
+        border-color: #f58723;
+    }
+</style>
 </body>
 
 </html>
