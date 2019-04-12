@@ -27,7 +27,7 @@
         <link rel="stylesheet" href="css/style.css">
         <title>Event Management Page</title>
     </head>
-    <body>
+    <body class="text-center">
         
         <%-- include navbar --%>
         <%@ include file="templates/navbar.html" %>
@@ -45,7 +45,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" id="events">
+                <div class="row justify-content-center" id="events">
                     
                 </div>
             </div>
@@ -94,7 +94,7 @@
                       if(eventLocation=="labs"){
                           eventImgSrc = "images/event2.jpg";
                       }
-                      htmlData += '<div class="col-md-6 featured-responsive"><div class="featured-place-wrap"><div class="featured-place-wrap">';
+                      htmlData += '<div class="col-md-5 featured-responsive" style="max-width:400px;"><div class="featured-place-wrap"><div class="featured-place-wrap">';
                       htmlData += '<a href="#"><img src='+eventImgSrc+' class="img-fluid" alt="#"><div class="featured-title-box">';
                       htmlData += '<h6>'+eventName+'</h6>';
                       htmlData += '<span>• </span><p>'+eventCategory+' </p> ';
