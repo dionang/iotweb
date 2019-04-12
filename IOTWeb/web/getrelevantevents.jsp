@@ -73,43 +73,44 @@
         </div>
 
         <div class="row justify-content-center">
-                
+            
+                <div class="form-group row justify-content-center">
                     <div class="col-md-2 text-center">
                     <label class="image-checkbox">
-                        <img src="images/food_cat.jpg" height="80" width="100"/>
+                        <img src="images/food_cat.jpg" height="100" width="150"/>
                         <input type="checkbox" id="food" value="food"> 
                         <h6>Food</h6>
                     </label>
                     </div>
                     <div class="col-md-2 text-center">
                     <label class="image-checkbox">
-                        <img src="images/tech_cat.jpg" height="80" width="100"/>
+                        <img src="images/tech_cat.jpg" height="100" width="150"/>
                         <input type="checkbox" id="technology" value="technology"> 
                         <h6>Technology</h6>
                     </label>
                     </div>
                     <div class="col-md-2 text-center">
                     <label class="image-checkbox">
-                        <img src="images/gaming_cat.jpg" height="80" width="100"/>
+                        <img src="images/gaming_cat.jpg" height="100" width="150"/>
                         <input type="checkbox" id="gaming" value="gaming"> 
                         <h6>Gaming</h6>
                     </label>
                     </div>
                     <div class="col-md-2 text-center">
                     <label class="image-checkbox">
-                        <img src="images/dance_cat.jpg" height="80" width="100"/>
+                        <img src="images/dance_cat.jpg" height="100" width="150"/>
                         <input type="checkbox" id="dance" value="dance"> 
                         <h6>Dance</h6>
                     </label>
                     </div>
                     <div class="col-md-2 text-center">
                     <label class="image-checkbox">
-                        <img src="images/music_cat.jpg" height="80" width="100"/>
+                        <img src="images/music_cat.jpg" height="100" width="150"/>
                         <input type="checkbox" id="music" value="music"> 
                         <h6>Music</h6>
                     </label>
                     </div>
-                    
+                </div>
             
         </div>
         
