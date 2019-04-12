@@ -18,9 +18,6 @@
         <link href="css/sb-admin.css" rel="stylesheet">
     </head>
     <body class="text-center" style="background-color: #FD8D00;">
-        
-        
-        
         <div class="container">
             <div class="row mt-5">
                 <div class="col">

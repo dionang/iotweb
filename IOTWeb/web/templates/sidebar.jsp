@@ -2,6 +2,12 @@
 <%@include file="protect.jsp"%>
 <ul class="sidebar navbar-nav" style="background-color:#464557">
   <li class="nav-item">
+    <a class="nav-link" href="getrelevantevents.jsp">
+      <i class="fas fa-calendar-plus"></i>
+      <span>Create Events</span>
+    </a>
+  </li>
+  <li class="nav-item">
     <a class="nav-link" href="eventmgmt.jsp">
       <i class="fas fa-fw fa-calendar-check"></i>
       <span>Event Management</span>
@@ -14,23 +20,12 @@
     </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="analyticsbylocation.jsp">
-      <i class="fas fa-fw fa-street-view"></i>
-      <span>Analytics by location</span>
-    </a>
-  </li>
-  <li class="nav-item">
     <a class="nav-link" href="analyticsbyevent.jsp">
       <i class="fas fa-person-booth"></i>
       <span>Analytics by event</span>
     </a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="getrelevantevents.jsp">
-      <i class="fas fa-person-booth"></i>
-      <span>Get Relevant Events</span>
-    </a>
-  </li>
+  
 </ul>
 <!-- Bootstrap core JavaScript-->
 <script src="vendor/jquery/jquery.min.js" type="text/javascript"></script>
