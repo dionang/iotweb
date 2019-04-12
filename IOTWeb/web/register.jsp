@@ -17,9 +17,15 @@
         <!-- Custom styles for this template-->
         <link href="css/sb-admin.css" rel="stylesheet">
     </head>
-    <body class="bg-dark">
+    <body class="text-center" style="background-color: #FD8D00;">
         <div class="container">
-            <div class="card card-register mx-auto mt-5">
+            <div class="row mt-5">
+                <div class="col">
+                    <img class="mb-4" src='images/scape_white.png' alt="#" width="200" height="100">
+                    <img class="mb-4" src='images/logo.png' alt="#" width="200" height="80">
+                </div>
+            </div>
+            <div class="card card-register mx-auto mt-5" style="margin-top: 0px !important;">
               <div class="card-header">Register an Admin Account</div>
               <div class="card-body">
                 <form action="AdminRegisterController">
