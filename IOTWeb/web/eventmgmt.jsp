@@ -40,7 +40,7 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="styled-heading">
-                        <h3>Featured Events at Scape</h3>
+                        <h3>Featured events at Scape</h3>
                     </div>
                 </div>
                 <div class="row justify-content-center" id="events">
