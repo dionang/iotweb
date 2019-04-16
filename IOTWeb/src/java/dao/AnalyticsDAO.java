@@ -50,9 +50,30 @@ public class AnalyticsDAO {
         return result;
     }
     
-    
-    
     public static ArrayList<String> getAllLocations(){
+        ArrayList<String> result = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("Select distinct location from schedule order by location;");
+            rs = stmt.executeQuery();
+            while(rs.next()){
+                String location = rs.getString("location");
+                result.add(location);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return result;
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+        
+        return result;
+    }
+    
+    public static ArrayList<String> getAllCurrentLocations(){
         ArrayList<String> result = new ArrayList<>();
         Connection conn = null;
         PreparedStatement stmt = null;

@@ -22,7 +22,7 @@
             <div class="row mt-5">
                 <div class="col">
                     <img class="mb-4" src='images/scape_white.png' alt="#" width="200" height="100">
-                    <img class="mb-4" src='images/logo.png' alt="#" width="200" height="80">
+                    <img class="mb-4" src='images/logo.png' alt="#" width="200" height="50">
                 </div>
             </div>
             

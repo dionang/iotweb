@@ -25,7 +25,7 @@
         <link rel="stylesheet" href="css/set1.css">
         <!-- Main CSS -->
         <link rel="stylesheet" href="css/style.css">
-        <title>Event Management Page</title>
+        <title>Featured Events Page</title>
     </head>
     <body class="text-center">
         
@@ -65,40 +65,42 @@
 
         <!-- Custom scripts for all pages-->
         <script src="js/sb-admin.min.js"></script>
+        <script src="js/moment.js"></script>
 
         <!-- Demo scripts for this page-->
         <script src="js/demo/datatables-demo.js"></script>
         <script src="js/demo/chart-area-demo.js"></script>
+        
         <script>
-		$(document).ready(function () {
-		  getData();
-		});
-        function getData() {
-            $.post('EventMgmtServlet', {
-              }, function(response) {
-                  
-                  var events = JSON.parse(response);
+            $(document).ready(function () {
+                getData();
+            });
+            
+            function getData() {
+              $.post('EventMgmtServlet', {
+                }, function(response) {
                   console.log(response);
+                  var events = JSON.parse(response);
                   var wrapper = document.getElementById("events");
                   var htmlData = '';
                   events.forEach(function(event){
-                      console.log(event.startDateTime);
-                      var eventStartDateTime = event.startDateTime;
-                      var eventEndDateTime = event.endDateTime;
+                      var eventStartDateTime = moment(event.startDateTime).format("ddd, MMM Do YYYY, h:mm a");
+                      var eventEndDateTime   = moment(event.endDateTime).format("ddd, MMM Do YYYY, h:mm a");
                       var eventName = event.eventName;
                       var eventLocation = event.location;
                       var eventCategory = event.category;
-                      var eventImgSrc = "images/event1.jpg"; 
-                      if(eventLocation=="labs"){
-                          eventImgSrc = "images/event2.jpg";
-                      }
+                      var eventImgSrc = "images/"+eventCategory+".jpg";
+                      var capacity = event.capacity;
+                      eventCategory = eventCategory.charAt(0).toUpperCase() + eventCategory.substr(1);
+                      
                       htmlData += '<div class="col-md-5 featured-responsive" style="max-width:400px;"><div class="featured-place-wrap"><div class="featured-place-wrap">';
                       htmlData += '<a href="#"><img src='+eventImgSrc+' class="img-fluid" alt="#"><div class="featured-title-box">';
                       htmlData += '<h6>'+eventName+'</h6>';
-                      htmlData += '<span>• </span><p>'+eventCategory+' </p> ';
-                      htmlData += '<ul><li><span class="icon-location-pin"></span><p>Location: '+eventLocation+'</p></li>';
-                      htmlData += '<li><span class="icon-screen-smartphone"></span><p>Date:'+eventStartDateTime+'-'+eventEndDateTime+'</p></li></ul>';
-                      htmlData += '<div class="bottom-icons"><div class="open-now">OPEN FOR SIGN UP</div><span class="ti-heart"></span>';
+                      htmlData += '<ul><li><span> </span><p>Category: '+eventCategory+' </p></li>';
+                      htmlData += '<li><span class="icon-location-pin"></span><p>Location: '+eventLocation+'</p></li>';
+                      htmlData += '<li><span class="icon-location-pin"></span><p>Capacity: '+capacity+'</p></li>';
+                      htmlData += '<li><span class="icon-screen-smartphone"></span><p>Start: '+eventStartDateTime+'</p><p>End: '+eventEndDateTime+'</p></li></ul>';
+                      htmlData += '<div class="bottom-icons"><div class="open-now"></div><span class="ti-heart"></span>';
                       htmlData += '<span class="ti-bookmark"></span></div>';
                       htmlData += '</div></a></div></div></div>';
                   });

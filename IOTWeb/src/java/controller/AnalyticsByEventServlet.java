@@ -8,6 +8,7 @@ package controller;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import dao.AnalyticsDAO;
+import dao.EventDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -78,6 +79,7 @@ public class AnalyticsByEventServlet extends HttpServlet {
                 }
                 
                 result.addProperty("totalParticipants", AnalyticsDAO.getNumberOfVisitors(eventName));
+                result.addProperty("capacity", EventDAO.getEventCapacity(eventName));
                 out.println(result.toString());
             } catch (ParseException ex) {
                 ex.printStackTrace();

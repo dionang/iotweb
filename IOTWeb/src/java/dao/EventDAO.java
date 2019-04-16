@@ -46,16 +46,18 @@ public class EventDAO {
                     eventsInfo.put("category",category);
                 }
                 
-                stmt = conn.prepareStatement("Select location, startDateTime, endDateTime from schedule where eid = ?;");
+                stmt = conn.prepareStatement("Select location, startDateTime, endDateTime, capacity from schedule where eid = ?;");
                 stmt.setInt(1,eventId);
                 rs2=stmt.executeQuery();
                 if(rs2.next()){
                     String location = rs2.getString("location");
                     String startDateTime = rs2.getString("startDateTime");
                     String endDateTime = rs2.getString("endDateTime");
+                    int capacity = rs2.getInt("capacity");
                     eventsInfo.put("location",location);
                     eventsInfo.put("startDateTime",startDateTime);
                     eventsInfo.put("endDateTime",endDateTime);
+                    eventsInfo.put("capacity",""+capacity);
                 }
                 result.add(eventsInfo);
             }
@@ -115,7 +117,7 @@ public class EventDAO {
         return result;
     }
     
-    public static boolean createEvent(String eventName, String location, Timestamp startDateTime, Timestamp endDateTime, String[] eventCategories) {
+    public static boolean createEvent(String eventName, String location, Timestamp startDateTime, Timestamp endDateTime, String[] eventCategories, int capacity) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -141,10 +143,11 @@ public class EventDAO {
             if (rs.next()) {
                 eid = rs.getInt("last_eid");
             }
-            // System.out.println("Eid: " + eid);
+             System.out.println("Eid: " + eid);
+             System.out.println(eventCategories);
             
             // create schedule and add event categories and return success status
-            if(createSchedule(eid, location, startDateTime, endDateTime)){
+            if(createSchedule(eid, location, startDateTime, endDateTime, capacity)){
                 return addEventCategories(eid, eventCategories);
             } else {
                 return false;
@@ -188,17 +191,18 @@ public class EventDAO {
         }
     }
     
-    public static boolean createSchedule(int eid, String location, Timestamp startDateTime, Timestamp endDateTime) throws IllegalArgumentException {
+    public static boolean createSchedule(int eid, String location, Timestamp startDateTime, Timestamp endDateTime, int capacity) throws IllegalArgumentException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             conn = ConnectionManager.getConnection();
-            stmt = conn.prepareStatement("insert into schedule values (?, ?, ?, ?)");
+            stmt = conn.prepareStatement("insert into schedule values (?, ?, ?, ?, ?)");
             stmt.setInt(1, eid);
             stmt.setString(2, location);
             stmt.setTimestamp(3, startDateTime);
             stmt.setTimestamp(4, endDateTime);
+            stmt.setInt(5, capacity);
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -228,5 +232,30 @@ public class EventDAO {
         } finally {
             ConnectionManager.close(conn, stmt, rs);
         }
+    }
+    
+    public static int getEventCapacity(String eventName) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        int capacity = 0;
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("SELECT capacity FROM event e, schedule s WHERE e.eid = s.eid and e.eventName = ?;");
+            stmt.setString(1, eventName);
+            rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                capacity = rs.getInt("capacity");
+            }
+            return capacity;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+        
     }
 }

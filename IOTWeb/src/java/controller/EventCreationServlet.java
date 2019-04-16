@@ -45,6 +45,7 @@ public class EventCreationServlet extends HttpServlet {
         String startDateTime = request.getParameter("startDateTime");
         String endDateTime = request.getParameter("endDateTime");
         String[] eventCategories = request.getParameterValues("category");
+        int capacity = Integer.parseInt(request.getParameter("capacity"));
         
         // parse the date input into Timestamp object
         Date startDate = new Date();
@@ -59,12 +60,15 @@ public class EventCreationServlet extends HttpServlet {
         Timestamp endTime = new Timestamp(endDate.getTime());
         
         try {
-            EventDAO.createEvent(eventName, location, startTime, endTime, eventCategories);
-            out.println("Created event successfully!");
+            EventDAO.createEvent(eventName, location, startTime, endTime, eventCategories, capacity);
+//            out.println("Created event successfully!");
+            response.sendRedirect("eventmgmt.jsp");
         } catch (IllegalArgumentException e) {
             // overlapping schedule
             System.out.println(e.getMessage());
             out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
         
     }

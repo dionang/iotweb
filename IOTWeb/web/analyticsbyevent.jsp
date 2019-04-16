@@ -20,7 +20,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>SB Admin - Dashboard</title>
+  <title>Analytics By Event</title>
 
   <!-- Custom fonts for this template-->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -61,10 +61,14 @@
                 <input type="submit" name="analyticsByEvent" onclick="getData()" class="btn" style="border: solid #9F9F9F 1px;" value="Submit">
             </div>               
         </div>
-        <div>
-            Total number of participants: <span id="totalParticipants"></span>
+        <div style="margin-bottom: 10px;">
+            <button type="button" class="btn btn-primary">
+                Total number of participants: <span class="badge badge-light" id="totalParticipants"></span>
+            </button>
+            <button type="button" class="btn btn-success">
+                Capacity of event: <span class="badge badge-light" id="capacity"></span>
+            </button>       
         </div>
-                    
         <!-- Area Chart Example-->
         <div class="card mb-3">
           <div class="card-header">
@@ -164,7 +168,8 @@
         eventName : eventName,
       }, function(response) {
         document.getElementById('totalParticipants').innerHTML = response.totalParticipants;
-        var colors = ['#008080', '#007FFF', '#FFBF00', '#8A2BE2', '#964B00', '#50C878', '#B57EDC', '#003153 ', '#C71585', '#C0C0C0']
+        document.getElementById('capacity').innerHTML = response.capacity;
+        var colors= ["#9C59B8", "#3598DC", "#2FCC71", "#E84C3D", "#F1C40F", "#ff5722", "#ffeb3b", "#e91e63", "#8bc34a", "#e51c23", "#009688"]
         plotLineChart(response);
         plotPreferencePieChart(response, colors);
         plotGenderPieChart(response);
@@ -261,7 +266,6 @@
 //            fill: false
         }];
         
-        console.log(datasets);
         if (genderPieChart !== null) {
             genderPieChart.destroy();
         }

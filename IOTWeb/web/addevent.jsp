@@ -8,13 +8,13 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.ArrayList"%>
 <% 
-    ArrayList<String> allLocations = AnalyticsDAO.getAllLocations();
+    ArrayList<String> allLocations = AnalyticsDAO.getAllCurrentLocations();
 %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Create Event</title>
         <!-- Custom fonts for this template-->
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
         <!-- Page level plugin CSS-->
@@ -46,13 +46,13 @@
                     <form action="EventCreationServlet" onsubmit="return validateForm()" style="width:80%;">
                         <div class="form-group row">
                             <label for="exampleFormControlInput1" class="col-sm-2">Event Name:</label>
-                            <div class="col-sm-8">
+                            <div class="col-sm-10">
                                 <input type="text" class="form-control" name="eventName">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="exampleFormControlInput1" class="col-sm-2">Location:</label>
-                            <div class="col-sm-8">
+                            <div class="col-sm-10">
                                 <select class="form-control" name="location">
                             <%
                                 for (String location : allLocations) {
@@ -64,16 +64,31 @@
                         </div>
                         <div class="form-group row">
                             <label for="exampleFormControlInput1" class="col-sm-2">Start Time:</label>
-                            <div class="col-sm-8">
-                                <input type="datetime-local" class="form-control" name="startDateTime" value="2019-03-18T08:00" required />
+                            <div class="col-sm-10">
+                                <input type="datetime-local" class="form-control" name="startDateTime" id="startDateTime" required />
                             </div>
                         </div>  
                         <div class="form-group row">
-                            <label for="exampleFormControlInput1" class="col-sm-2">End Time:</label>
-                            <div class="col-sm-8">
-                                <input type="datetime-local" class="form-control" name="endDateTime" value="2019-03-18T18:00" required />
+                            <label class="col-sm-2">End Time:</label>
+                            <div class="col-sm-10">
+                                <input type="datetime-local" class="form-control" name="endDateTime"   id="endDateTime" required />
                             </div>
-                        </div>  
+                        </div> 
+                        <div class="form-group row">
+                            <label for="exampleFormControlInput1" class="col-sm-2">Event Capacity:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="capacity">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2">Choose Venue Image:</label>
+                            <div class="input-group col-sm-10">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input">
+                                    <label class="custom-file-label">Choose file</label>
+                                </div>
+                            </div>
+                        </div> 
                         <div class="form-group row">
                             <label for="exampleFormControlInput1" class="col-sm-2">Categories:</label>
                             
@@ -123,6 +138,15 @@
             </section>
         </div>
     <script>
+        window.onload = function() {
+            var date   = new Date();
+            date       = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+
+            // auto-populate start and end dates
+            document.getElementById('startDateTime').value = date.toISOString().substring(0, 11) + "00:00";
+            document.getElementById('endDateTime').value   = date.toISOString().substring(0, 16);
+        }
+        
         function validateForm() {
             var startDateTime = document.forms[0].startDateTime.value;
             var endDateTime   = document.forms[0].endDateTime.value;

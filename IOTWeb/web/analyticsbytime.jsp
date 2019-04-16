@@ -163,6 +163,7 @@
         startDateTime : startDateTime,
         endDateTime   : endDateTime
       }, function(response) {
+        console.log(response);
         var colors = ['#008080', '#007FFF', '#FFBF00', '#8A2BE2', '#964B00', '#50C878', '#B57EDC', '#003153 ', '#C71585', '#C0C0C0']
         var ctx = document.getElementById("myBarChart");
         var datasets = [];
